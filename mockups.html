@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="es-MX" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drivo · Mockups de la app</title>
+    <link rel="icon" href="brand/logos/drivo-favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="brand/logos/drivo-favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="brand/logos/drivo-favicon-192.png">
+    <link rel="stylesheet" href="brand/drivo-tokens.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Fuentes de marca, autoalojadas (Poppins display · Inter texto) */
+        @font-face { font-family: 'Poppins'; font-weight: 600; font-display: swap; src: url(brand/fonts/Poppins-SemiBold.woff2) format('woff2'); }
+        @font-face { font-family: 'Poppins'; font-weight: 700; font-display: swap; src: url(brand/fonts/Poppins-Bold.woff2) format('woff2'); }
+        @font-face { font-family: 'Poppins'; font-weight: 800; font-display: swap; src: url(brand/fonts/Poppins-ExtraBold.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 400; font-display: swap; src: url(brand/fonts/Inter-400.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 500; font-display: swap; src: url(brand/fonts/Inter-500.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 600; font-display: swap; src: url(brand/fonts/Inter-600.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 700; font-display: swap; src: url(brand/fonts/Inter-700.woff2) format('woff2'); }
+
+        /* Alias locales -> tokens Drivo. Se declaran también en [data-theme] para que
+           cada pantalla resuelva su tema (pasajero = claro, chofer = oscuro). */
+        :root, [data-theme] {
+            --bg: var(--drivo-surface);
+            --surface: var(--drivo-surface-container);
+            --surface-elevated: var(--drivo-surface-container-high);
+            --primary: var(--drivo-primary);
+            --on-primary: var(--drivo-on-primary);
+            --primary-container: var(--drivo-primary-container);
+            --on-primary-container: var(--drivo-on-primary-container);
+            --danger: var(--drivo-error);
+            --on-danger: var(--drivo-on-error);
+            --danger-container: var(--drivo-error-container);
+            --on-danger-container: var(--drivo-on-error-container);
+            --text-main: var(--drivo-on-surface);
+            --text-muted: var(--drivo-on-surface-variant);
+            --border: var(--drivo-outline-variant);
+            --outline: var(--drivo-outline);
+            --chip-outline: var(--drivo-outline-chip);
+            --radius-lg: var(--drivo-radius-lg);
+            --radius-md: var(--drivo-radius-md);
+            --radius-sm: var(--drivo-radius-sm);
+            --transition: all var(--drivo-duration-medium) var(--drivo-easing-standard);
+            color: var(--text-main);
+        }
+        :root, [data-theme="light"] {
+            --price: var(--drivo-on-surface);
+            --star: var(--drivo-yellow-700);
+            --map: var(--drivo-mockup-map-light);
+            --road: var(--drivo-neutral-0);
+            --road-minor: var(--drivo-mockup-map-light-road);
+            --route: var(--drivo-green-700);
+            --dest: var(--drivo-green-950);
+            --sheet: var(--drivo-surface);
+            --sheet-shadow: 0 -8px 24px rgba(16, 37, 26, .12);
+            --status-ok-bg: var(--drivo-success-container);
+            --status-ok-fg: var(--drivo-success-onContainer);
+        }
+        [data-theme="dark"] {
+            --price: var(--drivo-secondary);
+            --star: var(--drivo-yellow-500);
+            --map: var(--drivo-mockup-map-dark);
+            --road: var(--drivo-mockup-map-dark-road);
+            --road-minor: var(--drivo-mockup-map-dark-road-minor);
+            --route: var(--drivo-green-300);
+            --dest: var(--drivo-neutral-0);
+            --sheet: var(--drivo-surface-container);
+            --sheet-shadow: none;
+            --status-ok-bg: var(--drivo-green-800);
+            --status-ok-fg: var(--drivo-green-100);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: var(--drivo-font-text);
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3, h4 { font-family: var(--drivo-font-display); font-weight: 700; letter-spacing: -.01em; }
+        .price, .num { font-family: var(--drivo-font-text); font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1; }
+        .price { font-weight: 700; color: var(--price); letter-spacing: -.01em; }
+        :focus-visible { outline: 3px solid var(--drivo-brand-green); outline-offset: 2px; border-radius: 8px; }
+
+        body {
+            background-color: var(--drivo-brand-night); color: var(--drivo-neutral-0);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 24px 16px 40px; position: relative; overflow-x: hidden;
+        }
+        .blob { position: absolute; border-radius: 50%; z-index: 0; pointer-events: none; }
+        .page-blobs { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+        .page-head, .mockup-nav, #app-container, .legend, #gallery { position: relative; z-index: 1; }
+
+        /* Encabezado de la página */
+        .page-head { width: 100%; max-width: 1180px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+        .page-head .brand { display: flex; align-items: center; gap: 14px; color: var(--drivo-neutral-0); text-decoration: none; }
+        .page-head .brand img { height: 36px; display: block; }
+        .page-head .brand span { font: 600 14px/20px var(--drivo-font-text); color: var(--drivo-brand-mint); letter-spacing: .12em; text-transform: uppercase; }
+        .page-head .back { background: var(--drivo-brand-night); color: var(--drivo-brand-mint); font: 600 14px/20px var(--drivo-font-text); text-decoration: none; padding: 10px 14px; border-radius: var(--drivo-radius-full); border: 1px solid var(--drivo-outline-chip-dark); }
+        .page-head .back:hover { background: #173326; }
+        .page-head :focus-visible { outline-color: var(--drivo-brand-yellow); }
+
+        /* Mockup Controller Tab */
+        .mockup-nav {
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;
+            margin-bottom: 20px; background: #173326; border: 1px solid #1E3F2F; padding: 14px; border-radius: var(--drivo-radius-lg);
+            max-width: 1180px; z-index: 100;
+        }
+        .mockup-nav .nav-label { font: 600 11px/16px var(--drivo-font-text); letter-spacing: .12em; text-transform: uppercase; color: var(--drivo-brand-mint); padding: 0 4px; }
+        .mockup-nav button {
+            background: #1E3F2F; color: var(--drivo-neutral-0); border: 1px solid transparent; padding: 8px 12px; min-height: 36px;
+            border-radius: var(--drivo-radius-full); cursor: pointer; font: 600 13px/18px var(--drivo-font-text);
+            transition: background var(--drivo-duration-short) var(--drivo-easing-standard);
+        }
+        .mockup-nav button:hover { background: #254c39; }
+        .mockup-nav button.active-nav { background: var(--drivo-brand-yellow); color: var(--drivo-brand-night); font-weight: 700; }
+        .mockup-nav .nav-group { display: inline-flex; flex-wrap: wrap; gap: 8px; align-items: center; border-left: 2px solid var(--drivo-outline-chip-dark); padding-left: 10px; margin-left: 5px; }
+        .mockup-nav .nav-group button { background: transparent; border-color: var(--drivo-outline-chip-dark); }
+        .mockup-nav .nav-group button:hover { background: #1E3F2F; }
+        .mockup-nav .nav-group button.active-nav { background: var(--drivo-brand-yellow); border-color: var(--drivo-brand-yellow); }
+        .mockup-nav .nav-group button.view-toggle { background: var(--drivo-green-300); border-color: var(--drivo-green-300); color: var(--drivo-brand-night); }
+        .mockup-nav :focus-visible { outline-color: var(--drivo-brand-yellow); }
+
+        .legend { background: var(--drivo-brand-night); margin-top: 16px; font: 600 12px/16px var(--drivo-font-text); letter-spacing: .1em; text-transform: uppercase; color: var(--drivo-brand-mint); border: 1px solid var(--drivo-outline-chip-dark); border-radius: var(--drivo-radius-full); padding: 8px 16px; }
+
+        /* Mobile Container */
+        #app-container {
+            width: 100%; max-width: 428px; height: 850px;
+            background-color: var(--bg); position: relative; overflow: hidden;
+            box-shadow: 0 30px 60px -20px rgba(0,0,0,.6); border-radius: 44px; border: 8px solid var(--drivo-mockup-device);
+        }
+
+        /* Screens */
+        .screen {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            flex-direction: column; background-color: var(--bg); color: var(--text-main);
+            animation: fadeIn var(--drivo-duration-medium) var(--drivo-easing-emphasized-decelerate);
+        }
+        .screen.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Mapa ilustrativo (color.mockup.*) */
+        .map-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                linear-gradient(8deg, transparent 0 46%, var(--road) 46% 48.5%, transparent 48.5% 100%),
+                linear-gradient(-6deg, transparent 0 72%, var(--road) 72% 74%, transparent 74% 100%),
+                linear-gradient(94deg, transparent 0 22%, var(--road) 22% 25%, transparent 25% 100%),
+                linear-gradient(84deg, transparent 0 70%, var(--road) 70% 72.5%, transparent 72.5% 100%),
+                repeating-linear-gradient(0deg, transparent 0 79px, var(--road-minor) 79px 83px),
+                repeating-linear-gradient(90deg, transparent 0 99px, var(--road-minor) 99px 103px);
+            background-color: var(--map); z-index: 0; overflow: hidden;
+        }
+        .map-blur { filter: blur(3px); }
+        .map-car { position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; border: 2px solid var(--route); display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(16,37,26,.25); }
+
+        /* General UI Components */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px; z-index: 10; position: relative; }
+        .btn-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--sheet); border: 1px solid var(--border); display: flex; justify-content: center; align-items: center; font-size: 1.1rem; cursor: pointer; color: var(--text-main); box-shadow: 0 4px 12px rgba(16,37,26,.10); flex: none; }
+        .bottom-sheet {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: var(--sheet); border-top-left-radius: var(--radius-lg); border-top-right-radius: var(--radius-lg);
+            padding: 20px 20px 24px; box-shadow: var(--sheet-shadow); z-index: 10;
+        }
+        .sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 0 auto 16px auto; }
+        .btn-primary { width: 100%; min-height: var(--drivo-button-height); padding: 14px 20px; background: var(--primary); color: var(--on-primary); border: none; border-radius: var(--drivo-radius-full); font: 700 16px/24px var(--drivo-font-text); cursor: pointer; transition: var(--transition); }
+        .btn-primary:hover { filter: brightness(1.06); }
+        .btn-secondary { background: var(--surface-elevated); color: var(--text-main); }
+        .btn-danger { background: var(--drivo-error-fg); color: var(--drivo-neutral-0); }
+        .btn-outline { background: transparent; color: var(--text-main); border: 1.5px solid var(--outline); }
+
+        /* Forms & Inputs */
+        .input-group { margin-bottom: 20px; }
+        .input-group label, .field-label { display: block; color: var(--text-muted); margin-bottom: 8px; font: 600 14px/20px var(--drivo-font-text); }
+        .input-control { width: 100%; min-height: 48px; background: var(--bg); border: 1.5px solid var(--outline); color: var(--text-main); padding: 12px 14px; border-radius: var(--radius-sm); font: 400 16px/24px var(--drivo-font-text); outline: none; }
+        .input-control::placeholder { color: var(--drivo-neutral-500); }
+        [data-theme="dark"] .input-control { background: var(--surface); }
+        [data-theme="dark"] .input-control::placeholder { color: var(--drivo-neutral-300); }
+        .input-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--drivo-brand-green) 35%, transparent); }
+
+        /* Animations */
+        @keyframes pulseMarker { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.5); opacity: 0.2; } 100% { transform: scale(1); opacity: 0.8; } }
+        .radar-pulse-container { width: 120px; height: 120px; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); }
+        .radar-ring { width: 100%; height: 100%; border-radius: 50%; background: var(--drivo-brand-green); position: absolute; opacity: 0; animation: radar-anim 2.5s infinite ease-out; }
+        .radar-ring:nth-child(2) { animation-delay: 0.8s; }
+        .radar-ring:nth-child(3) { animation-delay: 1.6s; }
+        @keyframes radar-anim { 0% { transform: scale(0.1); opacity: 0.5; } 100% { transform: scale(3); opacity: 0; } }
+
+        .pulse-logo { animation: splashPulse 2s infinite alternate var(--drivo-easing-standard); }
+        @keyframes splashPulse { 0% { transform: scale(0.97); } 100% { transform: scale(1.03); } }
+
+        /* Side Menu */
+        .side-menu {
+            position: absolute; top: 0; left: -100%; width: 292px; height: 100%;
+            z-index: 100; transition: left var(--drivo-duration-medium) var(--drivo-easing-standard);
+            display: flex; flex-direction: column; box-shadow: 8px 0 24px rgba(0,0,0,0.3);
+        }
+        .side-menu.open { left: 0; }
+        .side-menu > div { background: var(--bg); padding: 20px; }
+        .menu-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,23,17,0.55); z-index: 99; display: none; }
+        .menu-overlay.open { display: block; }
+        .menu-header { display: flex; align-items: center; gap: 15px; margin-bottom: 24px; margin-top: 20px; }
+        .menu-item { display: flex; align-items: center; gap: 15px; padding: 14px 0; min-height: 48px; border-bottom: 1px solid var(--border); color: var(--text-main); cursor: pointer; font: 500 16px/24px var(--drivo-font-text); }
+        .menu-item i { color: var(--text-muted); width: 24px; text-align: center; }
+        .menu-item .sub { display: block; font: 400 12px/16px var(--drivo-font-text); color: var(--text-muted); margin-top: 2px; }
+        .accent-link, .accent-link i { color: var(--primary) !important; font-weight: 700; }
+        .danger-link, .danger-link i { color: var(--danger) !important; }
+
+        .avatar { border-radius: 50%; background: var(--primary-container); color: var(--on-primary-container); display: flex; justify-content: center; align-items: center; flex: none; }
+        .avatar-neutral { background: var(--surface-elevated); color: var(--text-muted); }
+        .star { color: var(--star); }
+        .muted { color: var(--text-muted); }
+        .section-label { color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; font: 600 12px/16px var(--drivo-font-text); letter-spacing: .1em; }
+        .pill { display: inline-flex; align-items: center; gap: 6px; border-radius: var(--drivo-radius-full); padding: 4px 10px; font: 700 12px/16px var(--drivo-font-text); }
+        .pill-ok { background: var(--status-ok-bg); color: var(--status-ok-fg); }
+        .pill-neutral { background: var(--surface-elevated); color: var(--text-main); }
+        .pill-danger { background: var(--danger-container); color: var(--on-danger-container); }
+        .pill-yellow { background: var(--drivo-brand-yellow); color: var(--drivo-brand-night); }
+
+        /* Specific Passenger UI elements */
+        .search-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; min-height: 56px; display: flex; align-items: center; gap: 12px; color: var(--text-muted); cursor: pointer; margin-bottom: 12px; font: 500 16px/24px var(--drivo-font-text); }
+        .fav-item { display: flex; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+        .fav-item h4 { font: 600 16px/24px var(--drivo-font-text); }
+        .fav-item p { color: var(--text-muted); font-size: 0.85rem; }
+        .fav-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--primary-container); color: var(--on-primary-container); display: flex; justify-content: center; align-items: center; flex: none; }
+        .route-inputs { background: var(--sheet); margin: 0 20px; padding: 12px 16px; border-radius: var(--radius-md); z-index: 10; position: relative; box-shadow: 0 4px 12px rgba(16,37,26,.10); }
+        .input-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+        .input-row input { flex: 1; background: transparent; border: none; color: var(--text-main); font: 600 15px/22px var(--drivo-font-text); outline: none; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; display: inline-block; }
+        .dot-origin { background: var(--route); }
+        .dot-dest { background: var(--dest); }
+        .offer-head { display: flex; justify-content: space-between; align-items: center; font: 400 14px/20px var(--drivo-font-text); color: var(--text-muted); }
+        .min-chip { background: var(--primary-container); color: var(--on-primary-container); }
+        .stepper { display: flex; align-items: center; justify-content: space-between; margin: 6px 0 4px; }
+        .step-btn { width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid var(--chip-outline); background: transparent; color: var(--text-main); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .step-btn:hover { background: var(--surface); }
+        .price-large { font: var(--drivo-type-price-large); font-variant-numeric: tabular-nums; font-size: 48px; line-height: 56px; }
+        .slider-container { margin: 8px 0 12px; }
+        input[type=range] { width: 100%; accent-color: var(--primary); }
+        .range-legend { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; }
+        .cash-pill { display: flex; gap: 8px; align-items: center; justify-content: center; min-height: 44px; border-radius: var(--radius-sm); background: var(--primary-container); color: var(--on-primary-container); font: 700 14px/20px var(--drivo-font-text); margin-bottom: 12px; }
+        .driver-card { background: var(--sheet); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; }
+        .list-card { background: var(--surface); border: none; }
+        .btn-reject, .btn-accept { flex: 1; min-height: 52px; padding: 14px; border-radius: var(--drivo-radius-full); font: 700 15px/20px var(--drivo-font-text); border: none; cursor: pointer; }
+        .btn-reject { background: var(--surface-elevated); color: var(--text-main); margin-right: 10px; }
+        .btn-accept { background: var(--primary); color: var(--on-primary); }
+        .btn-sos { background: var(--drivo-error-fg); color: var(--drivo-neutral-0); border: none; border-radius: var(--drivo-radius-full); padding: 12px 18px; min-height: 48px; font: 700 14px/20px var(--drivo-font-text); z-index: 10; cursor: pointer; }
+        .action-row { display: flex; justify-content: space-between; margin: 16px 0; gap: 10px; }
+        .action-btn { flex: 1; background: var(--surface); min-height: 48px; padding: 12px; border-radius: var(--radius-sm); text-align: center; font: 600 14px/20px var(--drivo-font-text); cursor: pointer; }
+        .action-btn i { color: var(--primary); }
+        .offers-list { max-height: 500px; overflow-y: auto; padding: 10px 0; -ms-overflow-style: none; scrollbar-width: none; }
+        .offers-list::-webkit-scrollbar { display: none; }
+        .compact-card { padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .stars-container { display: flex; justify-content: center; gap: 10px; margin: 15px 0; font-size: 2.3rem; color: var(--drivo-neutral-300); cursor: pointer; }
+        .stars-container i.active { color: var(--star); }
+        .chip-time { white-space: nowrap; flex: none; background: var(--primary); color: var(--on-primary); padding: 4px 10px; border-radius: var(--drivo-radius-full); font: 700 13px/18px var(--drivo-font-text); }
+
+        /* Splash & Auth */
+        .splash-container { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background: var(--drivo-brand-night); position: relative; overflow: hidden; }
+        .splash-container .splash-logo { width: 220px; display: block; }
+        .splash-foot { position: absolute; bottom: 84px; left: 0; right: 0; text-align: center; color: var(--drivo-brand-mint); font: 600 12px/16px var(--drivo-font-text); letter-spacing: .1em; text-transform: uppercase; }
+        .otp-container { display: flex; justify-content: space-between; gap: 10px; margin: 12px 0; }
+        .otp-box { width: 64px; height: 72px; background: var(--bg); border: 1.5px solid var(--outline); border-radius: var(--radius-md); font: 700 2rem var(--drivo-font-text); font-variant-numeric: tabular-nums; text-align: center; color: var(--text-main); outline: none; }
+        .otp-box:focus { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--drivo-brand-green) 35%, transparent); }
+        .avatar-upload { width: 104px; height: 104px; background: var(--surface); border: 2px dashed var(--outline); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 30px auto; color: var(--text-muted); font-size: 2rem; cursor: pointer; position: relative; }
+        .avatar-badge { position: absolute; bottom: 0; right: 0; background: var(--primary); color: var(--on-primary); width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.95rem; border: 3px solid var(--bg); }
+
+        /* ================= DRIVER SPECIFIC CSS ================= */
+        .step-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 15px; margin-bottom: 12px; }
+        .step-header { display: flex; justify-content: space-between; align-items: center; font: 600 16px/24px var(--drivo-font-text); color: var(--text-main); }
+        .step-header > span:first-child { display: flex; align-items: center; }
+        .step-header .step-badge { background: var(--primary); color: var(--on-primary); border-radius: 50%; width: 26px; height: 26px; display: inline-flex; justify-content: center; align-items: center; font: 700 13px/1 var(--drivo-font-text); margin-right: 10px; flex: none; }
+        .step-card.collapsed .step-header { color: var(--text-muted); }
+        .step-card.collapsed .step-badge { background: var(--surface-elevated); color: var(--text-main); }
+        .upload-box { border: 1.5px dashed var(--chip-outline); border-radius: var(--radius-sm); padding: 15px; text-align: center; color: var(--text-muted); cursor: pointer; margin-top: 10px; background: var(--bg); font: 500 14px/20px var(--drivo-font-text); }
+        .upload-box i { color: var(--primary); font-size: 1.2rem; margin-bottom: 4px; }
+        .wallet-badge { background: var(--sheet); color: var(--text-main); padding: 10px 16px; min-height: 44px; border-radius: var(--drivo-radius-full); font: 700 14px/20px var(--drivo-font-text); border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .wallet-badge i { color: var(--primary); }
+        .driver-bg { background-color: var(--bg); }
+        .btn-offline { background: transparent; color: var(--text-main); border: 1.5px solid var(--outline) !important; }
+        .btn-online { background: var(--primary); color: var(--on-primary); }
+
+        .driver-request-card { background: var(--sheet); border: 1px solid #1E3F2F; border-radius: var(--radius-lg); padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.35); }
+        .kicker { font: 700 12px/16px var(--drivo-font-text); color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; }
+        .timer-track { height: 4px; border-radius: 4px; background: var(--surface-elevated); margin-top: 8px; overflow: hidden; }
+        .timer-fill { width: 100%; height: 100%; background: var(--drivo-brand-yellow); border-radius: 4px; animation: shrinkBar 15s linear forwards; }
+        .route-line { border-left: 2px dashed var(--chip-outline); margin-left: 5px; padding-left: 20px; padding-bottom: 0; position: relative; }
+        .route-line::before { content: ''; position: absolute; left: -6px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--route); }
+        .route-line::after { content: ''; position: absolute; left: -6px; bottom: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--dest); }
+        .route-line .place { color: var(--text-main); font: 600 15px/20px var(--drivo-font-text); margin-bottom: 2px; }
+        .route-line .meta { color: var(--text-muted); font: 400 13px/18px var(--drivo-font-text); margin-bottom: 12px; }
+
+        .counter-offer-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+        .offer-btn { min-height: 48px; padding: 12px; border: 1.5px solid var(--chip-outline); border-radius: var(--radius-sm); background: transparent; color: var(--text-main); cursor: pointer; font: 700 16px/20px var(--drivo-font-text); font-variant-numeric: tabular-nums; text-align: center; }
+        .offer-btn:hover { background: var(--surface-elevated); }
+        .offer-btn.highlight { border-color: var(--drivo-brand-yellow); color: var(--drivo-brand-yellow); }
+
+        .tile { flex: 1; background: var(--surface-elevated); padding: 12px; border-radius: var(--radius-sm); text-align: center; }
+        .tile p { color: var(--text-muted); font-size: 0.85rem; }
+        .tile .price { font-size: 1.4rem; margin-top: 4px; display: block; }
+        .sos-card { background: var(--danger-container); border: 1px solid var(--danger); padding: 20px; border-radius: var(--radius-md); text-align: center; margin-bottom: 28px; }
+        .sos-card h3 { color: var(--on-danger-container); margin-bottom: 5px; }
+        .sos-card p { color: var(--on-danger-container); font-size: 0.9rem; margin-bottom: 15px; }
+        .sos-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--drivo-error-fg); display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; color: var(--drivo-neutral-0); font-size: 1.6rem; }
+        .page-title { margin: 0; font: var(--drivo-type-title-large); }
+        .fine { font: 400 12px/16px var(--drivo-font-text); color: var(--text-muted); }
+
+        /* ================= VISTA DE TODAS LAS PANTALLAS ================= */
+        #gallery { display: none; width: 100%; max-width: 1880px; grid-template-columns: repeat(auto-fill, 428px); gap: 48px 32px; justify-content: center; margin-top: 8px; }
+        body.gallery #gallery { display: grid; }
+        body.gallery #app-container, body.gallery .legend { display: none; }
+        .g-item { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .g-phone { width: 428px; height: 850px; border: 8px solid var(--drivo-mockup-device); border-radius: 44px; overflow: hidden; position: relative; background: var(--drivo-mockup-device); box-shadow: 0 30px 60px -20px rgba(0,0,0,.6); }
+        .g-phone .screen { display: flex; animation: none; border-radius: 36px; overflow: hidden; }
+        .g-phone .screen[style*="overflow-y"] { overflow-y: auto !important; }
+        .g-cap { text-align: center; }
+        .g-cap b { display: block; font: 700 16px/24px var(--drivo-font-display); color: var(--drivo-neutral-0); }
+        .g-cap span { font: 600 11px/16px var(--drivo-font-text); letter-spacing: .1em; text-transform: uppercase; color: var(--drivo-brand-mint); }
+
+        @media (max-width: 480px) {
+            body { padding: 12px 8px 24px; }
+            .page-head .brand span { display: none; }
+            .page-blobs .blob:last-child { display: none; }
+            #app-container { height: 780px; border-width: 6px; border-radius: 36px; }
+            #gallery { grid-template-columns: 1fr; }
+            .g-item { width: 100%; }
+            .g-phone { width: 100%; max-width: 428px; height: 780px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-blobs" aria-hidden="true">
+        <div class="blob" style="width:560px;height:560px;right:-260px;top:-300px;background:var(--drivo-brand-green)"></div>
+        <div class="blob" style="width:300px;height:300px;left:-150px;bottom:-170px;background:var(--drivo-brand-yellow)"></div>
+    </div>
+
+    <header class="page-head">
+        <a class="brand" href="index.html"><img src="brand/logos/drivo-logo-claro.svg" alt="Drivo"><span>Mockups de la app</span></a>
+        <a class="back" href="index.html"><i class="fa-solid fa-arrow-left"></i> Inicio</a>
+    </header>
+
+    <div class="mockup-nav">
+        <!-- Passenger Nav -->
+        <span class="nav-label">Pasajero</span>
+        <button id="nav-0" class="active-nav" onclick="showScreen('0')">0. Bienvenida</button>
+        <button id="nav-A" onclick="showScreen('A')">A. Acceso</button>
+        <button id="nav-B" onclick="showScreen('B')">B. Perfil</button>
+        <button id="nav-1" onclick="showScreen('1')">1. Inicio</button>
+        <button id="nav-2" onclick="showScreen('2')">2. Tu oferta</button>
+        <button id="nav-3" onclick="showScreen('3')">3. Buscando</button>
+        <button id="nav-4" onclick="showScreen('4')">4. Viaje</button>
+        <button id="nav-5" onclick="showScreen('5')">5. Recibo</button>
+        <button id="nav-6" onclick="showScreen('6')">6. Historial</button>
+        <button id="nav-7" onclick="showScreen('7')">7. Ajustes</button>
+        <button id="nav-8" onclick="showScreen('8')">8. Pago</button>
+        <button id="nav-9" onclick="showScreen('9')">9. Ayuda</button>
+
+        <!-- Driver Nav -->
+        <span class="nav-group">
+            <span class="nav-label">Chofer</span>
+            <button id="nav-C1" onclick="showScreen('C1')">C1. Registro</button>
+            <button id="nav-C2" onclick="showScreen('C2')">C2. Inicio</button>
+            <button id="nav-C2B" onclick="showScreen('C2B')">C2-B. En línea</button>
+            <button id="nav-C3" onclick="showScreen('C3')">C3. Nuevo viaje</button>
+            <button id="nav-C4" onclick="showScreen('C4')">C4. Viaje</button>
+            <button id="nav-C5" onclick="showScreen('C5')">C5. Ganancias</button>
+            <button id="nav-C6" onclick="showScreen('C6')">C6. Ajustes</button>
+            <button id="nav-C7" onclick="showScreen('C7')">C7. Cobro</button>
+            <button id="nav-C8" onclick="showScreen('C8')">C8. Ayuda</button>
+        </span>
+        <span class="nav-group">
+            <button class="view-toggle" id="view-toggle" onclick="toggleGallery()"><i class="fa-solid fa-table-cells-large"></i> Ver todas</button>
+        </span>
+    </div>
+
+    <div id="app-container">
+
+        <!-- ================= SIDE MENU ================= -->
+        <div class="menu-overlay" onclick="toggleMenu()"></div>
+        <div class="side-menu" id="side-menu">
+
+            <!-- MENU PASAJERO -->
+            <div id="menu-passenger" data-theme="light" style="display: flex; flex-direction: column; height: 100%;">
+                <div class="menu-header">
+                    <div class="avatar" style="width: 52px; height: 52px; font-size: 1.4rem;"><i class="fa-solid fa-user"></i></div>
+                    <div>
+                        <h3 style="margin:0;">Ana Ejemplo</h3>
+                        <p class="muted num" style="font-size: 0.85rem;"><i class="fa-solid fa-star star"></i> 5.0</p>
+                    </div>
+                </div>
+                <div class="menu-item" onclick="showScreen('1'); toggleMenu();"><i class="fa-solid fa-house"></i> Inicio</div>
+                <div class="menu-item" onclick="showScreen('6'); toggleMenu();"><i class="fa-solid fa-clock-rotate-left"></i> Mis viajes</div>
+                <div class="menu-item" onclick="showScreen('8'); toggleMenu();"><i class="fa-solid fa-wallet"></i> Promociones y pago</div>
+                <div class="menu-item" onclick="showScreen('7'); toggleMenu();"><i class="fa-solid fa-gear"></i> Ajustes</div>
+                <div class="menu-item" onclick="showScreen('9'); toggleMenu();"><i class="fa-solid fa-headset"></i> Ayuda y seguridad</div>
+
+                <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 12px;">
+                    <!-- Toggle to Driver Mode -->
+                    <div class="menu-item accent-link" style="border: none;" onclick="setAppMode('driver'); showScreen('C2'); toggleMenu();">
+                        <i class="fa-solid fa-car-side"></i> Cambiar a modo chofer
+                    </div>
+                </div>
+
+                <div style="margin-top: auto; padding-bottom: 20px;">
+                    <div class="menu-item danger-link" style="border: none;" onclick="toggleMenu()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</div>
+                </div>
+            </div>
+
+            <!-- MENU CONDUCTOR -->
+            <div id="menu-driver" data-theme="dark" style="display: none; flex-direction: column; height: 100%;">
+                <div class="menu-header" style="background: var(--surface); padding: 12px; border-radius: var(--radius-md);">
+                    <div class="avatar" style="width: 52px; height: 52px; font-size: 1.4rem;"><i class="fa-solid fa-car"></i></div>
+                    <div>
+                        <h3 style="margin:0;">Ana Ejemplo</h3>
+                        <p class="muted num" style="font-size: 0.85rem;"><i class="fa-solid fa-star star"></i> 4.9 · Chofer</p>
+                    </div>
+                </div>
+                <div class="menu-item" onclick="showScreen('C2'); toggleMenu();"><i class="fa-solid fa-satellite-dish"></i> Inicio</div>
+                <div class="menu-item" onclick="showScreen('C5'); toggleMenu();"><i class="fa-solid fa-chart-line"></i> Ganancias e historial</div>
+                <div class="menu-item" onclick="showScreen('C6'); toggleMenu();"><i class="fa-solid fa-gear"></i> Ajustes y auto</div>
+                <div class="menu-item" onclick="showScreen('C8'); toggleMenu();"><i class="fa-solid fa-headset"></i> Seguridad y S.O.S</div>
+
+                <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 12px;">
+                    <!-- Toggle to Passenger Mode -->
+                    <div class="menu-item accent-link" style="border: none;" onclick="setAppMode('passenger'); showScreen('1'); toggleMenu();">
+                        <i class="fa-solid fa-user"></i> Cambiar a modo pasajero
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN 0: SPLASH ================= -->
+        <div id="screen-0" class="screen active" data-theme="dark" data-label="0. Bienvenida">
+            <div class="splash-container">
+                <div class="blob" style="position:absolute;width:300px;height:300px;right:-130px;top:-120px;background:var(--drivo-brand-green)"></div>
+                <div class="blob" style="position:absolute;width:150px;height:150px;left:-75px;bottom:-85px;background:var(--drivo-brand-yellow)"></div>
+                <div class="pulse-logo">
+                    <img class="splash-logo" src="brand/logos/drivo-logo-claro.svg" alt="Drivo">
+                </div>
+                <p class="splash-foot">App para Android · En etapa de pruebas</p>
+            </div>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN A: AUTH / OTP ================= -->
+        <div id="screen-A" class="screen" data-theme="light" data-label="A. Acceso" style="padding: 30px;">
+            <div style="margin-top: 50px; margin-bottom: 36px;">
+                <h1 style="font: var(--drivo-type-headline-medium); margin-bottom: 10px;">Ingresa tu celular</h1>
+                <p class="muted">Te mandamos un código por SMS para verificar tu cuenta.</p>
+            </div>
+            <div class="input-group">
+                <label for="tel-a">Número de celular</label>
+                <div style="display: flex; gap: 10px;">
+                    <select class="input-control num" style="width: 88px; appearance: none; text-align: center;" aria-label="Lada"><option>+52</option></select>
+                    <input id="tel-a" type="tel" class="input-control num" placeholder="10 dígitos">
+                </div>
+            </div>
+            <div style="margin-top: 28px;">
+                <label class="field-label">Código de verificación</label>
+                <div class="otp-container">
+                    <input type="text" class="otp-box" maxlength="1" value="7" aria-label="Dígito 1">
+                    <input type="text" class="otp-box" maxlength="1" value="2" aria-label="Dígito 2">
+                    <input type="text" class="otp-box" maxlength="1" placeholder="-" aria-label="Dígito 3">
+                    <input type="text" class="otp-box" maxlength="1" placeholder="-" aria-label="Dígito 4">
+                </div>
+            </div>
+            <div style="margin-top: auto; padding-bottom: 20px;">
+                <button class="btn-primary" onclick="showScreen('B')">Verificar y continuar</button>
+            </div>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN B: PROFILE ================= -->
+        <div id="screen-B" class="screen" data-theme="light" data-label="B. Perfil" style="padding: 30px;">
+            <div style="margin-top: 40px; margin-bottom: 28px; text-align: center;">
+                <h2 style="font: var(--drivo-type-headline-small); margin-bottom: 8px;">Completa tu perfil</h2>
+                <p class="muted" style="font-size: 0.95rem;">Así tu chofer sabe a quién recoge.</p>
+            </div>
+            <div class="avatar-upload">
+                <i class="fa-solid fa-user"></i>
+                <div class="avatar-badge"><i class="fa-solid fa-camera"></i></div>
+            </div>
+            <div class="input-group"><label for="name-b">Nombre completo</label><input id="name-b" type="text" class="input-control" placeholder="Ej. Ana Ejemplo"></div>
+            <div class="input-group"><label for="mail-b">Correo (opcional)</label><input id="mail-b" type="email" class="input-control" placeholder="ana@ejemplo.com"></div>
+            <div style="margin-top: auto; padding-bottom: 20px;"><button class="btn-primary" onclick="showScreen('1')">Guardar y empezar</button></div>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN 1: HOME ================= -->
+        <div id="screen-1" class="screen" data-theme="light" data-label="1. Inicio">
+            <div class="map-bg">
+                <div style="position: absolute; top: 34%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center;">
+                    <div style="width: 100px; height: 100px; background: color-mix(in srgb, var(--drivo-brand-green) 15%, transparent); border-radius: 50%; border: 1px solid color-mix(in srgb, var(--drivo-brand-green) 40%, transparent); animation: pulseMarker 3s infinite;"></div>
+                    <div style="position: absolute; width: 22px; height: 22px; background: var(--route); border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(16,37,26,0.35);"></div>
+                </div>
+            </div>
+            <div class="top-bar">
+                <div class="btn-icon" onclick="toggleMenu()" role="button" tabindex="0" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></div>
+                <div style="background: var(--sheet); border-radius: var(--drivo-radius-full); padding: 8px 14px; display: flex; gap: 8px; align-items: center; font: 700 13px/18px var(--drivo-font-text); box-shadow: 0 4px 12px rgba(16,37,26,.10);"><img src="brand/logos/drivo-logo-primario.svg" alt="Drivo" style="height: 20px;"> Pasajero</div>
+                <div class="btn-icon" role="button" tabindex="0" aria-label="Centrar mapa"><i class="fa-solid fa-location-crosshairs"></i></div>
+            </div>
+            <div class="bottom-sheet">
+                <div class="sheet-handle"></div>
+                <h2 style="font: var(--drivo-type-headline-small); margin-bottom: 14px;">¡Hola, Ana!</h2>
+                <div class="search-bar" onclick="showScreen('2')">
+                    <i class="fa-solid fa-magnifying-glass"></i> ¿A dónde vamos?
+                </div>
+                <div class="fav-item" onclick="showScreen('2')">
+                    <div class="fav-icon"><i class="fa-solid fa-house"></i></div>
+                    <div><h4>Casa</h4><p>Av. Principal 123</p></div>
+                </div>
+                <div class="fav-item" style="border: none;" onclick="showScreen('2')">
+                    <div class="fav-icon"><i class="fa-solid fa-briefcase"></i></div>
+                    <div><h4>Trabajo</h4><p>Parque industrial</p></div>
+                </div>
+                <button class="btn-primary" style="margin-top: 10px;" onclick="showScreen('2')">Nuevo viaje</button>
+            </div>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN 2: CONFIGURATION ================= -->
+        <div id="screen-2" class="screen" data-theme="light" data-label="2. Tu oferta">
+            <div class="map-bg">
+                <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+                    <path d="M 100,270 Q 260,240 320,420" stroke="var(--route)" stroke-width="5" fill="none" stroke-linecap="round" />
+                    <circle cx="100" cy="270" r="9" fill="var(--route)" stroke="white" stroke-width="3" />
+                    <circle cx="320" cy="420" r="9" fill="var(--dest)" stroke="white" stroke-width="3" />
+                    <rect x="190" y="262" width="70" height="28" rx="14" fill="white" stroke="var(--border)" stroke-width="1"/>
+                    <text x="225" y="281" font-size="13" fill="#10251A" font-weight="700" text-anchor="middle" font-family="Inter">9 min</text>
+                </svg>
+            </div>
+            <div class="top-bar"><div class="btn-icon" onclick="showScreen('1')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div></div>
+            <div class="route-inputs">
+                <div class="input-row"><span class="dot dot-origin"></span><input type="text" value="Mi ubicación actual" readonly aria-label="Origen"></div>
+                <div style="color: var(--primary); font: 600 13px/18px var(--drivo-font-text); padding: 6px 0 6px 22px;"><i class="fa-solid fa-plus"></i> Añadir parada</div>
+                <div class="input-row"><span class="dot dot-dest"></span><input type="text" value="Central de autobuses" aria-label="Destino"></div>
+            </div>
+            <div class="bottom-sheet">
+                <div class="sheet-handle"></div>
+                <div class="offer-head">
+                    <span>Tu oferta</span>
+                    <span class="pill min-chip num">Mínimo $40</span>
+                </div>
+                <div class="stepper">
+                    <button class="step-btn" onclick="stepOffer(-5)" aria-label="Bajar 5 pesos"><i class="fa-solid fa-minus"></i></button>
+                    <div class="price price-large" id="offer-amount" aria-live="polite">$60</div>
+                    <button class="step-btn" onclick="stepOffer(5)" aria-label="Subir 5 pesos"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <div class="slider-container">
+                    <input type="range" id="offer-range" min="40" max="200" step="5" value="60" oninput="setOffer(this.value)" aria-label="Ajustar tu oferta">
+                    <div class="range-legend num"><span>Mínimo $40</span><span>Sugerido para esta ruta: $60</span></div>
+                </div>
+                <div class="cash-pill"><i class="fa-solid fa-money-bill-wave"></i> Pagas en efectivo</div>
+                <button class="btn-primary" onclick="showScreen('3')">Pedir viaje</button>
+            </div>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN 3: RADAR (SECUENCIAL) ================= -->
+        <div id="screen-3" class="screen" data-theme="light" data-label="3. Buscando chofer">
+            <div class="map-bg map-blur">
+                <div class="radar-pulse-container"><div class="radar-ring"></div><div class="radar-ring"></div><div class="radar-ring"></div></div>
+            </div>
+            <div class="top-bar"><div class="btn-icon" onclick="showScreen('2')" role="button" tabindex="0" aria-label="Cancelar"><i class="fa-solid fa-xmark"></i></div></div>
+            <div style="text-align: center; position: relative; z-index: 5;"><span class="pill" style="background: var(--sheet); color: var(--text-main); padding: 10px 16px; font-size: 14px; box-shadow: 0 4px 12px rgba(16,37,26,.12);"><i class="fa-solid fa-hourglass-half" style="color: var(--primary);"></i> Buscando chofer…</span></div>
+            <div class="bottom-sheet" style="background: transparent; box-shadow: none;">
+                <p style="text-align: center; margin-bottom: 10px;"><span class="pill pill-yellow num">Contraoferta 1 de 3</span></p>
+                <div class="driver-card" style="box-shadow: 0 10px 25px rgba(16,37,26,.18); overflow: hidden;">
+                    <div style="height: 4px; background: var(--primary); width: 60%; margin: -20px -20px 16px -20px;"></div>
+                    <div style="display: flex; gap: 14px; margin-bottom: 14px; align-items: center;">
+                        <div class="avatar avatar-neutral" style="width: 50px; height: 50px; font-size: 1.4rem;"><i class="fa-solid fa-user"></i></div>
+                        <div><h4 style="font: 600 16px/22px var(--drivo-font-text);">Beto Muestra <span class="num muted" style="font-size: 0.85rem;"><i class="fa-solid fa-star star"></i> 4.9</span></h4><p class="muted" style="font-size: 0.85rem;">Nissan Versa blanco · ABC-123</p></div>
+                        <div class="chip-time num" style="margin-left: auto;">4 min</div>
+                    </div>
+                    <p style="text-align: center;" class="kicker">Contraoferta del chofer</p>
+                    <h2 class="price" style="text-align: center; font-size: 2.6rem; margin: 6px 0 2px 0;">$65</h2>
+                    <p class="muted num" style="text-align: center; font-size: 0.85rem; margin-bottom: 16px;">Tu oferta: $60 · pagas en efectivo</p>
+                    <div style="display: flex;">
+                        <button class="btn-reject" onclick="alert('Buscando la siguiente oferta…')"><i class="fa-solid fa-xmark"></i> Rechazar</button>
+                        <button class="btn-accept num" onclick="showScreen('4')"><i class="fa-solid fa-check"></i> Aceptar $65</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN 4: ACTIVE RIDE ================= -->
+        <div id="screen-4" class="screen" data-theme="light" data-label="4. Viaje">
+            <div class="map-bg">
+                <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+                    <path d="M 80,100 C 150,150 100,400 220,500" stroke="var(--drivo-green-200)" stroke-width="6" fill="none" stroke-linecap="round" />
+                    <path d="M 80,100 C 150,150 100,400 220,500" stroke="var(--route)" stroke-width="6" fill="none" stroke-dasharray="600" stroke-dashoffset="300" stroke-linecap="round" />
+                    <circle cx="220" cy="500" r="25" fill="var(--drivo-brand-green)" fill-opacity="0.2" />
+                    <circle cx="220" cy="500" r="9" fill="var(--route)" stroke="white" stroke-width="3" />
+                </svg>
+                <div class="map-car" style="left: 130px; top: 260px; background: white; color: var(--route);"><i class="fa-solid fa-car"></i></div>
+            </div>
+            <div class="top-bar"><button class="btn-sos"><i class="fa-solid fa-shield-halved"></i> S.O.S</button><span class="pill pill-ok" style="padding: 8px 12px; font-size: 13px;"><i class="fa-solid fa-car-side"></i> En camino</span></div>
+            <div class="bottom-sheet">
+                <div class="sheet-handle"></div>
+                <div style="display: flex; gap: 14px; align-items: center;">
+                    <div class="avatar" style="width: 50px; height: 50px; font-size: 1.4rem;"><i class="fa-solid fa-user"></i></div>
+                    <div><h4 style="font: 600 16px/22px var(--drivo-font-text);">Beto Muestra <span class="num muted" style="font-size: 0.85rem;"><i class="fa-solid fa-star star"></i> 4.9</span></h4><p class="muted" style="font-size: 0.85rem;">Nissan Versa blanco · ABC-123</p></div>
+                    <div class="pill pill-neutral num" style="margin-left: auto;">2 min</div>
+                </div>
+                <div class="action-row">
+                    <div class="action-btn"><i class="fa-solid fa-phone"></i> Llamar</div>
+                    <div class="action-btn"><i class="fa-solid fa-comment-dots"></i> Mensaje</div>
+                    <div class="action-btn"><i class="fa-solid fa-share-nodes"></i> Compartir</div>
+                </div>
+                <div style="background: var(--surface); padding: 14px; border-radius: var(--radius-md); text-align: center; margin-bottom: 14px;">
+                    <p class="muted" style="font-size: 0.9rem;">Precio acordado · pagas en efectivo</p>
+                    <h2 class="price" style="margin-top: 4px; font-size: 2rem;">$65</h2>
+                </div>
+                <button class="btn-primary btn-outline" style="color: var(--danger); border-color: var(--danger);" onclick="showScreen('5')">Terminar viaje</button>
+            </div>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN 5: RECEIPT & RATING ================= -->
+        <div id="screen-5" class="screen" data-theme="light" data-label="5. Recibo" style="padding: 25px; overflow-y: auto;">
+            <div style="text-align: center; margin-top: 26px; margin-bottom: 20px;">
+                <div style="width: 80px; height: 80px; background: var(--drivo-brand-green); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; color: white; font-size: 2.3rem;"><i class="fa-solid fa-check"></i></div>
+                <h2 style="font: var(--drivo-type-headline-small);">¡Llegaste a tu destino!</h2><p class="muted" style="font-size: 0.9rem; margin-top: 5px;">Viaje con Beto Muestra</p>
+            </div>
+            <div style="background: var(--surface); padding: 20px; border-radius: var(--radius-md); text-align: center; margin-bottom: 24px;">
+                <p class="muted" style="font-size: 0.9rem;">Pagaste en efectivo</p><h1 class="price" style="margin: 6px 0 0; font-size: 2.6rem;">$65</h1>
+            </div>
+            <h3 style="text-align: center; font: var(--drivo-type-title-large);">¿Cómo fue tu viaje?</h3>
+            <div class="stars-container" role="img" aria-label="5 de 5 estrellas"><i class="fa-solid fa-star active"></i><i class="fa-solid fa-star active"></i><i class="fa-solid fa-star active"></i><i class="fa-solid fa-star active"></i><i class="fa-solid fa-star active"></i></div>
+            <div class="input-group" style="margin-top: 12px;"><label for="c-5">Deja un comentario (opcional)</label><textarea id="c-5" class="input-control" rows="3" placeholder="Buen viaje, auto limpio…"></textarea></div>
+            <div style="margin-top: 16px; padding-bottom: 20px;"><button class="btn-primary" onclick="showScreen('1')">Enviar y volver al inicio</button></div>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN 6: HISTORIAL ================= -->
+        <div id="screen-6" class="screen" data-theme="light" data-label="6. Historial" style="padding: 20px; overflow-y: auto;">
+            <div class="top-bar" style="padding: 10px 0 20px 0;">
+                <div class="btn-icon" onclick="showScreen('1')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div>
+                <h3 class="page-title">Mis viajes</h3>
+                <div style="width: 48px;"></div>
+            </div>
+
+            <div class="driver-card" style="padding: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span class="muted num" style="font-size: 0.85rem;">Hoy, 14:30</span>
+                    <span class="price">$65.00</span>
+                </div>
+                <div class="route-line">
+                    <p class="place">Parque central</p>
+                    <p class="meta">Origen</p>
+                    <p class="place">Central de autobuses</p>
+                </div>
+                <div style="margin-top: 14px; border-top: 1px solid var(--border); padding-top: 10px; display: flex; align-items: center; gap: 10px;">
+                    <div class="avatar avatar-neutral" style="width: 30px; height: 30px; font-size: 0.8rem;"><i class="fa-solid fa-user"></i></div>
+                    <span class="muted" style="font-size: 0.9rem;">Beto Muestra (Nissan Versa)</span>
+                </div>
+            </div>
+
+            <div class="driver-card" style="padding: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span class="muted num" style="font-size: 0.85rem;">Ayer, 09:15</span>
+                    <span class="pill pill-danger"><i class="fa-solid fa-ban"></i> Cancelado</span>
+                </div>
+                <div class="route-line">
+                    <p class="place">Casa</p>
+                    <p class="meta">Origen</p>
+                    <p class="place">Centro</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN 7: CONFIGURACIÓN ================= -->
+        <div id="screen-7" class="screen" data-theme="light" data-label="7. Ajustes" style="padding: 20px; overflow-y: auto;">
+            <div class="top-bar" style="padding: 10px 0 20px 0;">
+                <div class="btn-icon" onclick="showScreen('1')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div>
+                <h3 class="page-title">Ajustes</h3>
+                <div style="width: 48px;"></div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 28px; padding: 16px; background: var(--surface); border-radius: var(--radius-md);">
+                <div class="avatar" style="width: 60px; height: 60px; font-size: 1.6rem;"><i class="fa-solid fa-user"></i></div>
+                <div style="flex: 1;">
+                    <h3 style="margin:0; font: var(--drivo-type-title-large); font-size: 20px;">Ana Ejemplo</h3>
+                    <p class="muted num" style="font-size: 0.85rem;">+52 ••• ••• 4567</p>
+                </div>
+                <i class="fa-solid fa-pen muted"></i>
+            </div>
+
+            <h4 class="section-label">Cuenta</h4>
+            <div class="driver-card list-card" style="padding: 0 16px;">
+                <div class="menu-item"><i class="fa-solid fa-location-dot"></i> Mis lugares (2 guardados)</div>
+                <div class="menu-item"><i class="fa-solid fa-wallet"></i> Forma de pago</div>
+                <div class="menu-item" style="border: none;"><i class="fa-solid fa-shield-halved"></i> Seguridad y emergencias</div>
+            </div>
+        </div>
+        <!-- ================= PASAJERO: SCREEN 8: PROMOS Y PAGO ================= -->
+        <div id="screen-8" class="screen" data-theme="light" data-label="8. Pago" style="padding: 20px; overflow-y: auto;">
+            <div class="top-bar" style="padding: 10px 0 20px 0;">
+                <div class="btn-icon" onclick="showScreen('1')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div>
+                <h3 class="page-title">Promociones y pago</h3>
+                <div style="width: 48px;"></div>
+            </div>
+
+            <div class="driver-card" style="padding: 22px; text-align: center; margin-bottom: 24px; background: var(--drivo-brand-night); border: none; position: relative; overflow: hidden;">
+                <div class="blob" style="position:absolute;width:120px;height:120px;right:-50px;top:-50px;background:var(--drivo-brand-green)"></div>
+                <i class="fa-solid fa-gift" style="font-size: 2.2rem; color: var(--drivo-brand-yellow); margin-bottom: 10px; position: relative;"></i>
+                <h3 style="color: white; margin-bottom: 5px; position: relative;">Tienes 2 cupones activos</h3>
+                <p style="color: var(--drivo-brand-mint); font-size: 0.9rem; position: relative;">Aplican en tu próximo viaje</p>
+                <button class="btn-primary" style="background: var(--drivo-brand-yellow); color: var(--drivo-brand-night); min-height: 44px; padding: 10px 18px; margin-top: 15px; font-size: 0.9rem; width: auto; display: inline-block; position: relative;">Ver cupones</button>
+            </div>
+
+            <h4 class="section-label">Forma de pago</h4>
+            <div class="driver-card list-card" style="padding: 0;">
+                <div class="menu-item" style="padding: 14px 16px; border: 2px solid var(--primary); border-radius: var(--radius-md); background: var(--primary-container);">
+                    <div style="display: flex; align-items: center; gap: 15px; width: 100%;">
+                        <i class="fa-solid fa-money-bill-wave" style="color: var(--on-primary-container); font-size: 1.2rem;"></i>
+                        <span style="flex: 1; color: var(--on-primary-container); font-weight: 700;">Efectivo</span>
+                        <i class="fa-solid fa-circle-check" style="color: var(--primary);"></i>
+                    </div>
+                </div>
+            </div>
+            <p class="fine" style="margin-top: 10px; text-align: center;">Por ahora, en Drivo pagas en efectivo al terminar tu viaje.</p>
+        </div>
+
+        <!-- ================= PASAJERO: SCREEN 9: SOPORTE Y SEGURIDAD ================= -->
+        <div id="screen-9" class="screen" data-theme="light" data-label="9. Ayuda" style="padding: 20px; overflow-y: auto;">
+            <div class="top-bar" style="padding: 10px 0 20px 0;">
+                <div class="btn-icon" onclick="showScreen('1')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div>
+                <h3 class="page-title">Centro de seguridad</h3>
+                <div style="width: 48px;"></div>
+            </div>
+
+            <div class="sos-card">
+                <div class="sos-icon"><i class="fa-solid fa-phone"></i></div>
+                <h3>Emergencia S.O.S</h3>
+                <p>Llama al 911 y comparte tu ubicación en tiempo real.</p>
+                <button class="btn-primary btn-danger" style="min-height: 48px; padding: 12px; font-size: 1rem;" onclick="alert('Llamando al 911…')">Llamar al 911</button>
+            </div>
+
+            <h4 class="section-label">Ayuda rápida</h4>
+            <div class="driver-card list-card" style="padding: 0 16px;">
+                <div class="menu-item"><i class="fa-solid fa-briefcase"></i> Perdí un objeto en el auto</div>
+                <div class="menu-item"><i class="fa-solid fa-file-invoice-dollar"></i> Tuve un problema con el cobro</div>
+                <div class="menu-item"><i class="fa-solid fa-user-shield"></i> El chofer no era el de la foto</div>
+                <div class="menu-item" style="border: none;"><i class="fa-solid fa-comment-dots"></i> Otro tipo de ayuda</div>
+            </div>
+        </div>
+        <!-- ========================================================================================= -->
+        <!--                                   APP DE CONDUCTOR                                        -->
+        <!-- ========================================================================================= -->
+
+        <!-- ================= CONDUCTOR: SCREEN C1: REGISTRO (7 PASOS) ================= -->
+        <div id="screen-C1" class="screen driver-bg" data-theme="dark" data-label="C1. Registro" style="padding: 20px; overflow-y: auto;">
+            <div class="top-bar" style="padding: 10px 0 20px 0;">
+                <div class="btn-icon" onclick="showScreen('1')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div>
+                <h3 class="page-title">Registro de chofer</h3>
+                <div style="width: 48px;"></div>
+            </div>
+
+            <p class="muted" style="font-size: 1rem; margin-bottom: 20px;">Completa los 7 pasos para activar tu cuenta de chofer en Drivo.</p>
+
+            <div class="input-group">
+                <label for="veh-c1" style="color: var(--text-main);">Elige tu vehículo</label>
+                <select id="veh-c1" class="input-control">
+                    <option>Auto particular</option>
+                    <option>Taxi</option>
+                </select>
+            </div>
+
+            <!-- Paso 1 -->
+            <div class="step-card">
+                <div class="step-header"><span><span class="step-badge">1</span> Datos personales</span> <i class="fa-solid fa-chevron-down muted"></i></div>
+                <!-- Simulación de que está expandido -->
+                <div style="margin-top: 12px;">
+                    <div class="upload-box"><i class="fa-solid fa-camera"></i><br>Tomar foto de perfil</div>
+                </div>
+            </div>
+
+            <!-- Paso 2 & 3 Colapsados -->
+            <div class="step-card collapsed"><div class="step-header"><span><span class="step-badge">2</span> Licencia de conducir</span> <i class="fa-solid fa-chevron-right"></i></div></div>
+            <div class="step-card collapsed"><div class="step-header"><span><span class="step-badge">3</span> Identificación oficial</span> <i class="fa-solid fa-chevron-right"></i></div></div>
+
+            <!-- Paso 4 Vehículo -->
+            <div class="step-card">
+                <div class="step-header"><span><span class="step-badge">4</span> Datos del vehículo</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div style="margin-top: 12px;">
+                    <select class="input-control num" style="margin-bottom: 10px;" aria-label="Año del vehículo">
+                        <option value="" disabled selected>Año del vehículo</option>
+                        <option>2025</option><option>2024</option><option>2023</option>
+                        <option>… hasta 2007</option>
+                        <option>2008</option><option>2007</option>
+                    </select>
+                    <input type="text" class="input-control" style="margin-bottom: 10px;" placeholder="Marca (ej. Nissan)" aria-label="Marca">
+                    <input type="text" class="input-control" style="margin-bottom: 10px;" placeholder="Placas" aria-label="Placas">
+                    <div class="upload-box"><i class="fa-solid fa-car"></i><br>Foto del vehículo (exterior)</div>
+                </div>
+            </div>
+
+            <!-- Paso 5 Propietario -->
+            <div class="step-card">
+                <div class="step-header"><span><span class="step-badge">5</span> Tarjeta de circulación</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div style="margin-top: 12px;">
+                    <div class="upload-box" style="margin-bottom: 14px;"><i class="fa-solid fa-file-lines"></i><br>Foto de la tarjeta de circulación</div>
+
+                    <label style="display: flex; align-items: center; gap: 10px; color: var(--text-main); cursor: pointer; padding: 12px; min-height: 48px; background: var(--bg); border-radius: var(--radius-sm); font-weight: 600;">
+                        <input type="checkbox" id="check-owner" checked onchange="toggleOwnerFields(this.checked)" style="width: 20px; height: 20px; accent-color: var(--primary);">
+                        ¿Eres el dueño del vehículo?
+                    </label>
+
+                    <!-- Campos Condicionales (Ocultos por defecto) -->
+                    <div id="owner-fields" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border);">
+                        <p style="color: var(--danger); font-size: 0.9rem; margin-bottom: 10px;"><i class="fa-solid fa-circle-exclamation"></i> Si no eres el dueño, necesitas su autorización por escrito.</p>
+                        <div class="upload-box"><i class="fa-solid fa-signature"></i><br>Carta de autorización del dueño</div>
+                        <div class="upload-box"><i class="fa-solid fa-id-card"></i><br>INE del dueño (frente)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paso 6 & 7 Colapsados -->
+            <div class="step-card collapsed"><div class="step-header"><span><span class="step-badge">6</span> Póliza de seguro</span> <i class="fa-solid fa-chevron-right"></i></div></div>
+            <div class="step-card collapsed"><div class="step-header"><span><span class="step-badge">7</span> Verificación de seguridad</span> <i class="fa-solid fa-chevron-right"></i></div></div>
+
+            <div style="margin-top: 20px; padding-bottom: 30px;">
+                <button class="btn-primary" onclick="showScreen('C2')">Enviar a revisión</button>
+            </div>
+        </div>
+
+        <!-- ================= CONDUCTOR: SCREEN C2: HOME / RADAR ================= -->
+        <div id="screen-C2" class="screen driver-bg" data-theme="dark" data-label="C2. Inicio (desconectado)">
+            <div class="map-bg">
+                <!-- Mapa oscuro centrado -->
+                <div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center;">
+                    <div style="position: absolute; width: 22px; height: 22px; background: var(--drivo-neutral-300); border-radius: 50%; border: 3px solid var(--drivo-brand-night); box-shadow: 0 0 0 2px var(--drivo-neutral-300);"></div>
+                </div>
+            </div>
+
+            <div class="top-bar">
+                <div class="btn-icon" onclick="toggleMenu()" role="button" tabindex="0" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></div>
+                <!-- Wallet Access -->
+                <div class="wallet-badge num" onclick="alert('Recarga tu saldo por transferencia. Se refleja en automático; no necesitas enviar comprobantes.')" role="button" tabindex="0">
+                    <i class="fa-solid fa-wallet"></i> Saldo $350.00
+                </div>
+            </div>
+
+            <div class="bottom-sheet" style="text-align: center;">
+                <div class="sheet-handle"></div>
+                <p style="margin-bottom: 14px;"><span class="pill pill-neutral" style="padding: 8px 14px; font-size: 14px;"><span class="dot" style="background: var(--drivo-neutral-300);"></span> Estás desconectado</span></p>
+                <button class="btn-primary btn-online" style="font-size: 1.15rem;" onclick="showScreen('C2B')">Conectarme</button>
+                <p class="fine" style="margin-top: 12px;">Recargas tu saldo por transferencia y se refleja en automático. Sin enviar comprobantes.</p>
+            </div>
+        </div>
+
+        <!-- ================= CONDUCTOR: SCREEN C2B: ONLINE / WAITING ================= -->
+        <div id="screen-C2B" class="screen driver-bg" data-theme="dark" data-label="C2-B. En línea">
+            <div class="map-bg">
+                <!-- Efecto de Radar de Conductor -->
+                <div class="radar-pulse-container" style="top: 45%;">
+                    <div class="radar-ring"></div>
+                    <div class="radar-ring"></div>
+                    <div class="radar-ring"></div>
+                </div>
+                <div style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center;">
+                    <div style="width: 70px; height: 70px; background: var(--drivo-green-800); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--drivo-green-100); font-size: 1.8rem; border: 2px solid var(--drivo-green-300);">
+                        <i class="fa-solid fa-car"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="top-bar">
+                <div class="btn-icon" onclick="toggleMenu()" role="button" tabindex="0" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></div>
+                <div class="wallet-badge" onclick="showScreen('C3')" role="button" tabindex="0">
+                    <i class="fa-solid fa-satellite-dish fa-beat"></i> Buscando viajes…
+                </div>
+                <div style="width:48px;"></div>
+            </div>
+
+            <div class="bottom-sheet" style="text-align: center;">
+                <div class="sheet-handle"></div>
+                <p style="margin-bottom: 14px;"><span class="pill pill-ok" style="padding: 8px 14px; font-size: 14px;"><i class="fa-solid fa-circle-check"></i> Estás en línea</span></p>
+                <button class="btn-primary btn-offline" onclick="showScreen('C2')">Desconectarme</button>
+            </div>
+        </div>
+
+        <!-- ================= CONDUCTOR: SCREEN C3: INCOMING REQUEST & CONTRAOFERTA ================= -->
+        <div id="screen-C3" class="screen driver-bg" data-theme="dark" data-label="C3. Nuevo viaje">
+            <div class="map-bg">
+                <!-- Simulación de punto a punto en el mapa -->
+                <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+                    <path d="M 150,110 L 165,190 L 300,220" stroke="var(--route)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="150" cy="110" r="10" fill="var(--route)" stroke="var(--drivo-brand-night)" stroke-width="3" />
+                    <circle cx="300" cy="220" r="10" fill="var(--dest)" stroke="var(--drivo-brand-night)" stroke-width="3" />
+                </svg>
+            </div>
+
+            <div class="top-bar">
+                <div class="wallet-badge" style="margin: 0 auto;"><span class="dot" style="background: var(--drivo-green-400);"></span> En línea · recibiendo viajes</div>
+            </div>
+
+            <!-- Incoming Request Card -->
+            <div class="bottom-sheet" style="padding: 14px; background: transparent; box-shadow: none;">
+                <div class="driver-request-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="kicker">Nuevo viaje</span>
+                        <span class="num" style="color: var(--drivo-brand-yellow); font-weight: 700; font-size: 13px;">0:12</span>
+                    </div>
+                    <div class="timer-track"><div class="timer-fill"></div></div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <div class="price" style="font-size: 52px; line-height: 1.1;" id="c3-offer">$60</div>
+                        <div class="num muted" style="text-align: right; font-size: 13px; line-height: 18px;">Efectivo<br>3.1 km · 9 min</div>
+                    </div>
+                    <p class="num muted" style="font-size: 13px; margin-top: 2px;">Recibes <b style="color: var(--text-main);" id="c3-net">$54.00</b> · comisión 10%</p>
+
+                    <div style="display: flex; gap: 10px; align-items: center; margin: 12px 0; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+                        <div class="avatar avatar-neutral" style="width: 40px; height: 40px; font-size: 1rem;"><i class="fa-solid fa-user"></i></div>
+                        <div>
+                            <h3 style="margin:0; font: 600 16px/22px var(--drivo-font-text);">Luis Ejemplo</h3>
+                            <p class="muted num" style="font-size: 0.85rem;"><i class="fa-solid fa-star star"></i> 5.0 · Nuevo</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="route-line">
+                            <p class="place">Parque central</p>
+                            <p class="meta num">Recoger a 4 min · 2.5 km</p>
+                            <p class="place">Central de autobuses <span class="num muted" style="font-weight: 400; font-size: 13px;">· viaje de 3.1 km</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Negotiation Buttons -->
+                    <p class="muted" style="font-size: 13px; margin-top: 10px;">Contraofertar</p>
+                    <div class="counter-offer-row">
+                        <button class="offer-btn" onclick="stepCounter(-5)" aria-label="Bajar 5 pesos">−$5</button>
+                        <button class="offer-btn" id="c3-counter" aria-live="polite" aria-label="Monto de tu contraoferta">$60</button>
+                        <button class="offer-btn" onclick="stepCounter(5)" aria-label="Subir 5 pesos">+$5</button>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 12px;">
+                        <button class="btn-primary btn-secondary" style="flex: 1;" onclick="showScreen('C2')">Ignorar</button>
+                        <button class="btn-primary num" id="c3-main" style="flex: 2;" onclick="driverMainAction()">Aceptar $60</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CONDUCTOR: SCREEN C4: VIAJE EN CURSO ================= -->
+        <div id="screen-C4" class="screen driver-bg" data-theme="dark" data-label="C4. Viaje">
+            <div class="map-bg">
+                <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+                    <!-- Ruta Activa hacia el pasajero -->
+                    <path d="M 220,500 C 100,400 150,150 80,100" stroke="var(--route)" stroke-width="6" fill="none" stroke-linecap="round" />
+                    <!-- Auto -->
+
+                    <!-- Pasajero -->
+                    <circle cx="80" cy="100" r="10" fill="var(--dest)" stroke="var(--drivo-brand-night)" stroke-width="3" />
+                </svg>
+                <div class="map-car" style="left: 190px; top: 430px; background: var(--drivo-green-800); color: var(--drivo-green-100);"><i class="fa-solid fa-car"></i></div>
+            </div>
+
+            <div class="top-bar">
+                <div class="btn-icon" style="background: var(--drivo-error-fg); border-color: var(--drivo-error-fg); color: white;" role="button" tabindex="0" aria-label="Llamar al pasajero"><i class="fa-solid fa-phone"></i></div>
+                <div class="wallet-badge">
+                    Navegar con Waze <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </div>
+            </div>
+
+            <div class="bottom-sheet" style="padding: 22px;">
+                <div class="sheet-handle"></div>
+                <p style="text-align: center; margin-bottom: 8px;"><span class="pill pill-ok"><i class="fa-solid fa-car-side"></i> En camino</span></p>
+                <h3 style="text-align: center; margin-bottom: 4px; font: var(--drivo-type-title-large);">Recoger a Luis Ejemplo</h3>
+                <p class="num muted" style="text-align: center; font-size: 1rem; margin-bottom: 18px;">Parque central · a 2.5 km</p>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+                    <div class="tile">
+                        <p>Tarifa acordada</p>
+                        <span class="price">$60</span>
+                    </div>
+                    <div class="tile">
+                        <p>Llegas en</p>
+                        <span class="price" style="color: var(--text-main);">6 min</span>
+                    </div>
+                </div>
+                <p class="muted" style="text-align: center; font-size: 14px; margin-bottom: 14px;"><i class="fa-solid fa-money-bill-wave" style="color: var(--primary);"></i> Cobras en efectivo al terminar</p>
+
+                <button class="btn-primary" onclick="showScreen('C7')">Terminar viaje</button>
+            </div>
+        </div>
+
+        <!-- ================= CONDUCTOR: SCREEN C5: GANANCIAS E HISTORIAL ================= -->
+        <div id="screen-C5" class="screen driver-bg" data-theme="dark" data-label="C5. Ganancias" style="padding: 20px; overflow-y: auto;">
+            <div class="top-bar" style="padding: 10px 0 20px 0;">
+                <div class="btn-icon" onclick="showScreen('C2')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div>
+                <h3 class="page-title">Ganancias</h3>
+                <div style="width: 48px;"></div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 22px;">
+                <p class="muted" style="font-size: 0.95rem;">Hoy · ganancia neta</p>
+                <h1 class="price" style="font-size: 3rem; margin: 4px 0;">$360.00</h1>
+                <p class="muted num" style="font-size: 0.9rem;">4 viajes completados · comisión 10% ya descontada</p>
+                <p style="margin-top: 10px;"><span class="pill pill-neutral">Cifras de ejemplo</span></p>
+            </div>
+
+            <h4 class="section-label">Historial de hoy</h4>
+
+            <div class="driver-card list-card" style="padding: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 700;">Luis Ejemplo</span>
+                    <span class="price">+$54.00</span>
+                </div>
+                <div class="num muted" style="font-size: 0.85rem; line-height: 1.5;">
+                    <div>13:45 · Central de autobuses</div>
+                    <div>Cobraste $60.00 · comisión 10%: −$6.00</div>
+                </div>
+            </div>
+
+            <div class="driver-card list-card" style="padding: 16px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 700;">Rosa Ejemplo</span>
+                    <span class="price">+$135.00</span>
+                </div>
+                <div class="num muted" style="font-size: 0.85rem; line-height: 1.5;">
+                    <div>11:20 · Centro</div>
+                    <div>Cobraste $150.00 · comisión 10%: −$15.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CONDUCTOR: SCREEN C6: CONFIGURACIÓN ================= -->
+        <div id="screen-C6" class="screen driver-bg" data-theme="dark" data-label="C6. Ajustes" style="padding: 20px; overflow-y: auto;">
+            <div class="top-bar" style="padding: 10px 0 20px 0;">
+                <div class="btn-icon" onclick="showScreen('C2')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div>
+                <h3 class="page-title">Ajustes</h3>
+                <div style="width: 48px;"></div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 28px; padding: 16px; background: var(--surface); border-radius: var(--radius-md);">
+                <div class="avatar" style="width: 60px; height: 60px; font-size: 1.6rem;"><i class="fa-solid fa-car"></i></div>
+                <div style="flex: 1;">
+                    <h3 style="margin:0; font: var(--drivo-type-title-large); font-size: 20px;">Ana Ejemplo</h3>
+                    <p style="margin-top: 4px;"><span class="pill pill-ok"><i class="fa-solid fa-circle-check"></i> Cuenta activa</span></p>
+                </div>
+            </div>
+
+            <h4 class="section-label">Preferencias</h4>
+            <div class="driver-card list-card" style="padding: 0 16px;">
+                <div class="menu-item"><i class="fa-solid fa-car"></i> Mi vehículo (Nissan Versa)</div>
+                <div class="menu-item"><i class="fa-solid fa-file-contract"></i> Mis documentos</div>
+                <div class="menu-item"><i class="fa-solid fa-wallet"></i> <span>Saldo y recargas<span class="sub">Recargas por transferencia y se refleja en automático. Sin enviar comprobantes.</span></span></div>
+                <div class="menu-item" style="border: none;"><i class="fa-solid fa-shield-halved"></i> Seguridad y S.O.S</div>
+            </div>
+        </div>
+
+
+        <!-- ================= CONDUCTOR: SCREEN C7: COBRO Y CALIFICACIÓN ================= -->
+        <div id="screen-C7" class="screen driver-bg" data-theme="dark" data-label="C7. Cobro" style="padding: 20px; overflow-y: auto;">
+            <div class="top-bar" style="padding: 10px 0 20px 0;">
+                <div class="btn-icon" onclick="showScreen('C4')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div>
+                <h3 class="page-title">Cobrar</h3>
+                <div style="width: 48px;"></div>
+            </div>
+
+            <div style="background: var(--surface); border-radius: var(--radius-lg); padding: 22px; margin: 6px 0 22px;">
+                <p style="font: 600 14px/20px var(--drivo-font-text); color: var(--text-main);">Cobras al momento, en efectivo</p>
+                <h1 class="price" style="font-size: 4rem; line-height: 1.1; margin: 6px 0;">$60</h1>
+                <p class="muted num" style="font-size: 0.95rem;">Comisión 10%: $6.00 · se descuenta de tu saldo.</p>
+                <p class="num" style="font-size: 0.95rem; margin-top: 6px;">Tu ganancia: <b>$54.00</b></p>
+            </div>
+
+            <div class="driver-card list-card" style="padding: 20px; text-align: center; margin-bottom: 26px;">
+                <h4 style="margin-bottom: 14px; font: 600 16px/24px var(--drivo-font-text);">¿Cómo calificarías a Luis Ejemplo?</h4>
+                <div style="display: flex; justify-content: center; gap: 15px; font-size: 2rem;" role="img" aria-label="5 de 5 estrellas">
+                    <i class="fa-solid fa-star star"></i>
+                    <i class="fa-solid fa-star star"></i>
+                    <i class="fa-solid fa-star star"></i>
+                    <i class="fa-solid fa-star star"></i>
+                    <i class="fa-solid fa-star star"></i>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="showScreen('C2')">Cerrar viaje</button>
+            <p class="fine" style="text-align: center; margin-top: 12px;">Señal débil: guardamos el viaje y reintentamos solos.</p>
+        </div>
+
+        <!-- ================= CONDUCTOR: SCREEN C8: SEGURIDAD Y SOPORTE ================= -->
+        <div id="screen-C8" class="screen driver-bg" data-theme="dark" data-label="C8. Ayuda" style="padding: 20px; overflow-y: auto;">
+            <div class="top-bar" style="padding: 10px 0 20px 0;">
+                <div class="btn-icon" onclick="showScreen('C2')" role="button" tabindex="0" aria-label="Regresar"><i class="fa-solid fa-arrow-left"></i></div>
+                <h3 class="page-title">Centro de seguridad</h3>
+                <div style="width: 48px;"></div>
+            </div>
+
+            <div class="sos-card">
+                <div class="sos-icon"><i class="fa-solid fa-phone"></i></div>
+                <h3>Botón de pánico (S.O.S)</h3>
+                <p>Llama a las autoridades y avisa a tus contactos de emergencia.</p>
+                <button class="btn-primary btn-danger" style="min-height: 48px; padding: 12px; font-size: 1rem;" onclick="alert('Enviando alerta…')">Enviar alerta S.O.S</button>
+            </div>
+
+            <h4 class="section-label">Ayuda para choferes</h4>
+            <div class="driver-card list-card" style="padding: 0 16px;">
+                <div class="menu-item"><i class="fa-solid fa-car-burst"></i> Reportar accidente vial</div>
+                <div class="menu-item"><i class="fa-solid fa-users-slash"></i> El pasajero fue agresivo</div>
+                <div class="menu-item"><i class="fa-solid fa-money-bill-transfer"></i> Problema con mi saldo o ganancias</div>
+                <div class="menu-item" style="border: none;"><i class="fa-solid fa-headset"></i> Llamar a soporte</div>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="legend">Pantalla ilustrativa · datos de ejemplo</p>
+    <div id="gallery" aria-label="Todas las pantallas"></div>
+
+    <script>
+        function setAppMode(mode) {
+            if (mode === 'driver') {
+                document.getElementById('menu-passenger').style.display = 'none';
+                document.getElementById('menu-driver').style.display = 'flex';
+            } else {
+                document.getElementById('menu-passenger').style.display = 'flex';
+                document.getElementById('menu-driver').style.display = 'none';
+            }
+        }
+
+        function toggleMenu() {
+            document.getElementById('side-menu').classList.toggle('open');
+            document.querySelector('.menu-overlay').classList.toggle('open');
+        }
+
+        function showScreen(id) {
+            if (document.body.classList.contains('gallery')) toggleGallery(false);
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.mockup-nav button').forEach(el => el.classList.remove('active-nav'));
+
+            document.getElementById('screen-' + id).classList.add('active');
+            let navBtn = document.getElementById('nav-' + id);
+            if(navBtn) navBtn.classList.add('active-nav');
+        }
+
+        function toggleOwnerFields(isOwner) {
+            document.getElementById('owner-fields').style.display = isOwner ? 'none' : 'block';
+        }
+
+        /* ---- Oferta del pasajero: − / monto / +, mínimo $40 ---- */
+        const MIN_FARE = 40, COMMISSION = 0.10;   // comisión general de ejemplo
+        let offer = 60;
+        function setOffer(v) {
+            offer = Math.max(MIN_FARE, Math.min(200, Number(v)));
+            document.getElementById('offer-amount').textContent = '$' + offer;
+            document.getElementById('offer-range').value = offer;
+        }
+        function stepOffer(d) { setOffer(offer + d); }
+
+        /* ---- Chofer: aceptar o contraofertar (−$5 / monto / +$5) ---- */
+        const passengerOffer = 60;
+        let counter = passengerOffer;
+        const money = n => '$' + n.toFixed(2);
+        function renderCounter() {
+            const c = document.getElementById('c3-counter');
+            c.textContent = '$' + counter;
+            c.classList.toggle('highlight', counter !== passengerOffer);
+            document.getElementById('c3-net').textContent = money(counter * (1 - COMMISSION));
+            document.getElementById('c3-main').textContent = counter === passengerOffer ? 'Aceptar $' + counter : 'Contraofertar $' + counter;
+        }
+        function stepCounter(d) { counter = Math.max(MIN_FARE, counter + d); renderCounter(); }
+        function driverMainAction() {
+            if (counter === passengerOffer) { showScreen('C4'); }
+            else { alert('Enviamos tu contraoferta de $' + counter + '. El pasajero la acepta o la rechaza.'); }
+        }
+
+        /* ---- Vista de todas las pantallas (galería). Se abre con el botón o con #todas ---- */
+        function toggleGallery(force) {
+            const on = typeof force === 'boolean' ? force : !document.body.classList.contains('gallery');
+            const gallery = document.getElementById('gallery');
+            const app = document.getElementById('app-container');
+            const btn = document.getElementById('view-toggle');
+            if (on === document.body.classList.contains('gallery')) return;
+            if (on) {
+                document.querySelectorAll('#app-container > .screen').forEach(screen => {
+                    const item = document.createElement('figure');
+                    item.className = 'g-item';
+                    const phone = document.createElement('div');
+                    phone.className = 'g-phone';
+                    phone.appendChild(screen);
+                    const cap = document.createElement('figcaption');
+                    cap.className = 'g-cap';
+                    cap.innerHTML = '<b></b><span>Pantalla ilustrativa · datos de ejemplo</span>';
+                    cap.querySelector('b').textContent = screen.dataset.label || screen.id;
+                    item.append(phone, cap);
+                    gallery.appendChild(item);
+                });
+                document.body.classList.add('gallery');
+                btn.innerHTML = '<i class="fa-solid fa-mobile-screen"></i> Ver una';
+                if (location.hash !== '#todas') history.replaceState(null, '', '#todas');
+            } else {
+                gallery.querySelectorAll('.screen').forEach(screen => app.appendChild(screen));
+                gallery.innerHTML = '';
+                document.body.classList.remove('gallery');
+                btn.innerHTML = '<i class="fa-solid fa-table-cells-large"></i> Ver todas';
+                if (location.hash === '#todas') history.replaceState(null, '', location.pathname + location.search);
+            }
+        }
+
+        /* Accesibilidad: elementos con role="button" responden a Enter y Espacio */
+        document.addEventListener('keydown', e => {
+            const t = e.target;
+            if ((e.key === 'Enter' || e.key === ' ') && t.getAttribute && t.getAttribute('role') === 'button') { e.preventDefault(); t.click(); }
+        });
+
+        // Add timer animation
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes shrinkBar { from { width: 100%; } to { width: 0%; } }`;
+        document.head.appendChild(style);
+
+        if (location.hash === '#todas') toggleGallery(true);
+    </script>
+</body>
+</html>

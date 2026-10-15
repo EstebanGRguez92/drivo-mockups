@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es-MX" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drivo · Mockups</title>
+    <meta name="description" content="Mockups ilustrativos de la app Drivo y de su backoffice.">
+    <link rel="icon" href="brand/logos/drivo-favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="brand/logos/drivo-favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="brand/logos/drivo-favicon-192.png">
+    <link rel="stylesheet" href="brand/drivo-tokens.css">
+    <style>
+        @font-face { font-family: 'Poppins'; font-weight: 700; font-display: swap; src: url(brand/fonts/Poppins-Bold.woff2) format('woff2'); }
+        @font-face { font-family: 'Poppins'; font-weight: 800; font-display: swap; src: url(brand/fonts/Poppins-ExtraBold.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 400; font-display: swap; src: url(brand/fonts/Inter-400.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 600; font-display: swap; src: url(brand/fonts/Inter-600.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 700; font-display: swap; src: url(brand/fonts/Inter-700.woff2) format('woff2'); }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 400 18px/1.5 var(--drivo-font-text); color: var(--drivo-brand-night); background: var(--drivo-brand-niebla); }
+        a { color: inherit; }
+        :focus-visible { outline: 3px solid var(--drivo-green-700); outline-offset: 3px; border-radius: 12px; }
+
+        .hero { position: relative; overflow: hidden; background: var(--drivo-brand-night); color: var(--drivo-neutral-0); padding: 56px 24px 96px; }
+        .hero :focus-visible { outline-color: var(--drivo-brand-yellow); }
+        .blob { position: absolute; border-radius: 50%; pointer-events: none; }
+        .blob-green { width: 520px; height: 520px; right: -200px; top: -260px; }
+        @media (max-width: 640px) { .blob-green { width: 240px; height: 240px; right: -140px; top: -150px; } }
+        .wrap { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+        .logo { height: 56px; display: block; margin-left: -12px; }
+        .kicker { font: 700 14px/20px var(--drivo-font-text); letter-spacing: .12em; text-transform: uppercase; color: var(--drivo-brand-yellow); margin: 64px 0 14px; }
+        h1 { font: 800 clamp(40px, 7vw, 76px)/1.02 var(--drivo-font-display); letter-spacing: -.025em; max-width: 13ch; }
+        h1 .y { color: var(--drivo-brand-yellow); }
+        .lead { color: var(--drivo-brand-mint); font-size: clamp(18px, 2.2vw, 22px); max-width: 38ch; margin-top: 20px; }
+
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: -56px; padding: 0 24px; }
+        .card { display: flex; flex-direction: column; gap: 14px; background: var(--drivo-neutral-0); border: 2px solid var(--drivo-green-100); border-radius: var(--drivo-radius-2xl); padding: 32px; text-decoration: none; transition: transform var(--drivo-duration-short) var(--drivo-easing-standard), box-shadow var(--drivo-duration-short) var(--drivo-easing-standard); }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -20px rgba(16, 37, 26, .35); }
+        .ico { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--drivo-green-100); flex: none; }
+        .ico svg { width: 32px; height: 32px; }
+        .card h2 { font: 700 28px/1.15 var(--drivo-font-display); letter-spacing: -.01em; }
+        .card p { color: var(--drivo-neutral-600); font-size: 16px; }
+        .card .go { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; min-height: 48px; padding: 12px 22px; border-radius: var(--drivo-radius-full); background: var(--drivo-green-700); color: var(--drivo-neutral-0); font: 700 16px/24px var(--drivo-font-text); }
+        .tag { align-self: flex-start; font: 600 12px/16px var(--drivo-font-text); letter-spacing: .08em; text-transform: uppercase; color: var(--drivo-green-900); background: var(--drivo-green-100); border-radius: var(--drivo-radius-full); padding: 4px 12px; }
+
+        .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 40px; padding: 0 24px; }
+        .fact { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; }
+        .check { width: 28px; height: 28px; border-radius: 50%; background: var(--drivo-brand-green); display: flex; align-items: center; justify-content: center; flex: none; }
+        .fact b { display: block; }
+        .fact span { color: var(--drivo-neutral-600); }
+        .pill-num { font-variant-numeric: tabular-nums; }
+
+        footer { margin-top: 64px; border-top: 1px solid var(--drivo-green-100); padding: 24px; }
+        footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--drivo-neutral-600); }
+        footer b { font: 700 16px/24px var(--drivo-font-display); color: var(--drivo-brand-night); }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="blob blob-green" style="background:var(--drivo-brand-green)"></div>
+        <div class="blob" style="width:220px;height:220px;left:-110px;bottom:-140px;background:var(--drivo-brand-yellow)"></div>
+        <div class="wrap">
+            <img class="logo" src="brand/logos/drivo-logo-claro.svg" alt="Drivo">
+            <p class="kicker">Mockups de producto</p>
+            <h1>La app y el panel, <span class="y">en un vistazo.</span></h1>
+            <p class="lead">El pasajero propone, tú aceptas o contraofertas. Cobras en efectivo.</p>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <div class="cards">
+            <a class="card" href="mockups.html">
+                <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#107038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18.5h3"/></svg></span>
+                <span class="tag">App · pasajero y chofer</span>
+                <h2>Pantallas de la app</h2>
+                <p>Flujo completo: pedir viaje con tu oferta, contraoferta del chofer, viaje, cobro en efectivo, ganancias y ayuda.</p>
+                <span class="go">Ver pantallas <span aria-hidden="true">→</span></span>
+            </a>
+            <a class="card" href="backoffice.html">
+                <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#107038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="2.5"/><path d="M8 21h8M12 17v4M6.5 13l3-3 2.5 2.5 4.5-4.5"/></svg></span>
+                <span class="tag">Escritorio · operación</span>
+                <h2>Backoffice</h2>
+                <p>Panel general, mapa de flota, revisión de documentos, tarifas y comisión, y centro de soporte.</p>
+                <span class="go">Abrir backoffice <span aria-hidden="true">→</span></span>
+            </a>
+        </div>
+
+        <div class="facts">
+            <div class="fact"><span class="check" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Precio en acuerdo</b><span>El pasajero propone; el chofer acepta o contraoferta.</span></div></div>
+            <div class="fact"><span class="check" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b class="pill-num">Mínimo $40</b><span>por viaje.</span></div></div>
+            <div class="fact"><span class="check" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Cobras al momento</b><span>Pago en efectivo.</span></div></div>
+            <div class="fact"><span class="check" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Saldo por transferencia</b><span>Se refleja en automático, sin enviar comprobantes.</span></div></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="wrap">
+            <span>Pantallas ilustrativas · datos de ejemplo<br>App para Android · En etapa de pruebas</span>
+            <b>Equipo Drivo</b>
+        </div>
+    </footer>
+</body>
+</html>

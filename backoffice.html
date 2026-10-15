@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es-MX" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drivo · Backoffice</title>
+    <link rel="icon" href="brand/logos/drivo-favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="brand/logos/drivo-favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="brand/logos/drivo-favicon-192.png">
+
+    <!-- Tokens de marca Drivo -->
+    <link rel="stylesheet" href="brand/drivo-tokens.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Fuentes de marca, autoalojadas */
+        @font-face { font-family: 'Poppins'; font-weight: 600; font-display: swap; src: url(brand/fonts/Poppins-SemiBold.woff2) format('woff2'); }
+        @font-face { font-family: 'Poppins'; font-weight: 700; font-display: swap; src: url(brand/fonts/Poppins-Bold.woff2) format('woff2'); }
+        @font-face { font-family: 'Poppins'; font-weight: 800; font-display: swap; src: url(brand/fonts/Poppins-ExtraBold.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 400; font-display: swap; src: url(brand/fonts/Inter-400.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 500; font-display: swap; src: url(brand/fonts/Inter-500.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 600; font-display: swap; src: url(brand/fonts/Inter-600.woff2) format('woff2'); }
+        @font-face { font-family: 'Inter'; font-weight: 700; font-display: swap; src: url(brand/fonts/Inter-700.woff2) format('woff2'); }
+
+        :root {
+            /* Colores (alias de tokens Drivo) */
+            --primary: var(--drivo-primary);                 /* verde 700, botones y énfasis en claro */
+            --on-primary: var(--drivo-on-primary);
+            --primary-container: var(--drivo-primary-container);
+            --on-primary-container: var(--drivo-on-primary-container);
+            --night: var(--drivo-brand-night);               /* verde noche */
+            --yellow: var(--drivo-brand-yellow);             /* amarillo Drivo: solo sobre oscuro o como fondo */
+            --page-bg: var(--drivo-brand-niebla);
+            --surface: var(--drivo-surface);
+            --surface-container: var(--drivo-surface-container);
+            --text-main: var(--drivo-on-surface);
+            --text-muted: var(--drivo-neutral-600);
+            --border: var(--drivo-green-100);
+            --border-strong: var(--drivo-outline);
+            --danger: var(--drivo-error-fg);
+            --warning-bg: var(--drivo-warning-container);
+            --warning-fg: var(--drivo-warning-onContainer);
+            --success-bg: var(--drivo-success-container);
+            --success-fg: var(--drivo-success-onContainer);
+            --danger-bg: var(--drivo-error-container);
+            --danger-fg: var(--drivo-error-onContainer);
+            --info-bg: var(--drivo-info-container);
+            --info-fg: var(--drivo-info-onContainer);
+
+            /* Sizing */
+            --sidebar-width: 280px;
+            --topbar-height: 72px;
+            --focus-ring: 0 0 0 3px var(--drivo-neutral-0), 0 0 0 6px var(--drivo-green-700);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--drivo-font-text);
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Typography overrides for headings */
+        h1, h2, h3, h4, h5 {
+            font-family: var(--drivo-font-display);
+            font-weight: 700;
+            letter-spacing: -.01em;
+        }
+        .num, td, .kpi-info h2 { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1; }
+
+        /* Focus visible en todo el panel */
+        :focus { outline: none; }
+        :focus-visible { box-shadow: var(--focus-ring); border-radius: 8px; }
+        .sidebar :focus-visible { box-shadow: 0 0 0 3px var(--yellow); }
+
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--night);
+            color: var(--drivo-neutral-0);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            position: relative;
+            overflow: hidden;
+            flex: none;
+        }
+        .sidebar .blob { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
+        .sidebar > *:not(.blob) { position: relative; z-index: 1; }
+
+        .brand {
+            height: var(--topbar-height);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 24px;
+            border-bottom: 1px solid #1E3F2F;
+        }
+        .brand img { height: 30px; display: block; }
+        .brand span { font: 600 11px/16px var(--drivo-font-text); letter-spacing: .12em; text-transform: uppercase; color: var(--drivo-brand-mint); border: 1px solid var(--drivo-outline-chip-dark); border-radius: 999px; padding: 3px 8px; }
+
+        .nav-links {
+            padding: 20px 14px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 14px;
+            margin-bottom: 6px;
+            border-radius: var(--drivo-radius-sm);
+            border: none;
+            background: transparent;
+            color: var(--drivo-brand-mint);
+            font: 500 15px/20px var(--drivo-font-text);
+            text-align: left;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background var(--drivo-duration-short) var(--drivo-easing-standard), color var(--drivo-duration-short) var(--drivo-easing-standard);
+        }
+
+        .nav-item:hover {
+            background: #173326;
+            color: var(--drivo-neutral-0);
+        }
+
+        .nav-item.active {
+            background: var(--yellow);
+            color: var(--night);
+            font-weight: 700;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 1.1rem;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        .sidebar-foot { padding: 20px 20px 52px; }
+        .sidebar-foot .btn-outline { color: var(--drivo-neutral-0); border-color: var(--drivo-outline-chip-dark); }
+        .sidebar-foot .btn-outline:hover { background: #173326; }
+        .sidebar-foot p { margin-top: 12px; font: 400 12px/16px var(--drivo-font-text); color: var(--drivo-brand-mint); text-align: center; }
+
+        /* ================= MAIN CONTENT ================= */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: var(--topbar-height);
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            flex: none;
+        }
+
+        .search-box {
+            background: var(--surface-container);
+            border: 1.5px solid transparent;
+            border-radius: 999px;
+            padding: 0 18px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            width: 340px;
+        }
+        .search-box:focus-within { border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 3px var(--drivo-green-100); }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            outline: none;
+            margin-left: 10px;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+        .search-box input::placeholder { color: var(--drivo-neutral-500); }
+        .search-box input:focus-visible { box-shadow: none; }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: none; background: transparent; color: var(--text-main); font-size: 1.15rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; position: relative; }
+        .icon-btn:hover { background: var(--surface-container); }
+        .icon-btn .dot { position: absolute; top: 9px; right: 10px; width: 9px; height: 9px; border-radius: 50%; background: var(--danger); border: 2px solid var(--surface); }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            flex: none;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn var(--drivo-duration-long) var(--drivo-easing-emphasized-decelerate);
+            max-width: 1400px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= COMPONENTS ================= */
+        .page-header {
+            margin-bottom: 28px;
+        }
+        .kicker { font: 700 12px/16px var(--drivo-font-text); letter-spacing: .12em; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; }
+
+        .page-header h2 {
+            font: var(--drivo-type-headline-large);
+            margin-bottom: 4px;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+        }
+        .sample-tag { display: inline-flex; align-items: center; gap: 6px; margin-left: 8px; font: 600 11px/16px var(--drivo-font-text); letter-spacing: .08em; text-transform: uppercase; color: var(--on-primary-container); background: var(--primary-container); border-radius: 999px; padding: 3px 10px; vertical-align: middle; }
+
+        /* Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--drivo-radius-lg);
+            padding: 24px;
+            border: 2px solid var(--border);
+        }
+        .card h3 { font: var(--drivo-type-title-large); font-size: 20px; }
+
+        .kpi-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .kpi-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem;
+            flex: none;
+        }
+
+        .kpi-icon.green { background: var(--primary-container); color: var(--on-primary-container); }
+        .kpi-icon.blue { background: var(--night); color: var(--drivo-brand-mint); }
+        .kpi-icon.yellow { background: var(--yellow); color: var(--night); }
+        .kpi-icon.red { background: var(--danger-bg); color: var(--danger-fg); }
+
+        .kpi-info h4 {
+            color: var(--text-muted);
+            font: 600 12px/16px var(--drivo-font-text);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin-bottom: 4px;
+        }
+
+        .kpi-info h2 {
+            font: 700 30px/36px var(--drivo-font-text);
+            letter-spacing: -.01em;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--drivo-neutral-100);
+        }
+
+        th {
+            color: var(--text-muted);
+            font: 600 12px/16px var(--drivo-font-text);
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            background: var(--surface-container);
+        }
+        th:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        th:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+        td { font-size: 0.95rem; }
+
+        tbody tr:hover {
+            background: var(--drivo-green-50);
+        }
+
+        /* Badges & Buttons */
+        .badge {
+            padding: 5px 12px;
+            border-radius: 999px;
+            font: 700 12px/16px var(--drivo-font-text);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .badge.pending { background: var(--warning-bg); color: var(--warning-fg); }
+        .badge.active { background: var(--success-bg); color: var(--success-fg); }
+        .badge.danger { background: var(--danger-bg); color: var(--danger-fg); }
+
+        .btn {
+            min-height: 40px;
+            padding: 9px 18px;
+            border-radius: 999px;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            font: 700 14px/20px var(--drivo-font-text);
+            transition: background var(--drivo-duration-short) var(--drivo-easing-standard), filter var(--drivo-duration-short) var(--drivo-easing-standard);
+            white-space: nowrap;
+        }
+
+        .btn:hover { filter: brightness(1.08); }
+        .btn-primary { background: var(--primary); color: var(--on-primary); }
+        .btn-danger { background: var(--danger); color: var(--drivo-neutral-0); }
+        .btn-outline { background: transparent; border-color: var(--border-strong); color: var(--text-main); }
+        .btn-outline:hover { background: var(--surface-container); filter: none; }
+        .btn-chip { background: var(--surface-container); color: var(--text-main); }
+        .btn-chip.active { background: var(--night); color: var(--drivo-neutral-0); }
+
+        /* Mock Map (color.mockup.*) */
+        .mock-map {
+            width: 100%;
+            height: 600px;
+            border-radius: var(--drivo-radius-lg);
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(6deg, transparent 0 40%, var(--drivo-neutral-0) 40% 41.6%, transparent 41.6% 100%),
+                linear-gradient(-4deg, transparent 0 74%, var(--drivo-neutral-0) 74% 75.4%, transparent 75.4% 100%),
+                linear-gradient(93deg, transparent 0 30%, var(--drivo-neutral-0) 30% 31.2%, transparent 31.2% 100%),
+                linear-gradient(86deg, transparent 0 66%, var(--drivo-neutral-0) 66% 67.2%, transparent 67.2% 100%),
+                repeating-linear-gradient(0deg, transparent 0 72px, var(--drivo-mockup-map-light-road) 72px 76px),
+                repeating-linear-gradient(90deg, transparent 0 96px, var(--drivo-mockup-map-light-road) 96px 100px);
+            background-color: var(--drivo-mockup-map-light);
+            border: 2px solid var(--border);
+        }
+
+        .map-marker {
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--drivo-neutral-0);
+            border: 3px solid var(--drivo-neutral-0);
+            box-shadow: 0 2px 8px rgba(16,37,26,0.3);
+        }
+        .map-marker.available { background: var(--primary); }
+        .map-marker.on-trip { background: var(--yellow); color: var(--night); border-color: var(--night); }
+        .map-marker.alert { background: var(--danger); }
+
+        .map-legend { position: absolute; bottom: 20px; left: 20px; background: var(--surface); padding: 16px 18px; border-radius: var(--drivo-radius-md); border: 2px solid var(--border); }
+        .map-legend h4 { margin-bottom: 10px; font: 600 16px/24px var(--drivo-font-text); }
+        .map-legend div { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; }
+        .map-legend div:last-child { margin-bottom: 0; }
+        .map-legend .map-marker { position: static; width: 26px; height: 26px; border-width: 2px; font-size: 0.7rem; box-shadow: none; }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            font: 600 14px/20px var(--drivo-font-text);
+        }
+        .form-control {
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 14px;
+            background: var(--surface);
+            border: 1.5px solid var(--border-strong);
+            border-radius: var(--drivo-radius-sm);
+            color: var(--text-main);
+            font-size: 1rem;
+            font-variant-numeric: tabular-nums;
+        }
+        .form-control:hover { border-color: var(--text-main); }
+        .form-control:focus-visible, .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--drivo-green-100); outline: none; }
+        .hint { font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; line-height: 1.45; }
+
+        .activity { list-style: none; }
+        .activity li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--drivo-neutral-100); font-size: 0.92rem; line-height: 1.45; }
+        .activity li:last-child { border-bottom: none; }
+        .activity .badge { flex: none; }
+
+        .chart-days { display: flex; gap: 10px; margin-top: 8px; }
+        .chart-days span { flex: 1; text-align: center; font: 600 12px/16px var(--drivo-font-text); color: var(--text-muted); }
+
+        @media (max-width: 900px) {
+            body { flex-direction: column; height: auto; min-height: 100vh; overflow: auto; }
+            .sidebar { width: 100%; }
+            .sidebar .blob { display: none; }
+            .nav-links { display: flex; gap: 6px; overflow-x: auto; padding: 10px 14px; }
+            .nav-item { width: auto; margin: 0; white-space: nowrap; flex: none; }
+            .sidebar-foot { display: none; }
+            .main-wrapper { overflow: visible; }
+            .topbar { padding: 0 16px; gap: 12px; }
+            .search-box { width: auto; flex: 1; min-width: 0; }
+            .admin-profile .who { display: none; }
+            .content-area { padding: 20px 16px; overflow: visible; }
+            .two-col { grid-template-columns: 1fr !important; }
+            .page-header.split { flex-direction: column; align-items: flex-start !important; gap: 12px; }
+            .card-head { flex-direction: column; align-items: flex-start !important; gap: 12px; }
+            .card-head > div { flex-wrap: wrap; }
+            .mock-map { height: 460px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar" data-theme="dark">
+        <div class="blob" style="width:200px;height:200px;right:-120px;bottom:190px;background:var(--drivo-brand-green)"></div>
+        <div class="blob" style="width:110px;height:110px;left:-70px;bottom:-72px;background:var(--drivo-brand-yellow)"></div>
+        <div class="brand">
+            <a href="index.html" style="display:flex;border-radius:8px;"><img src="brand/logos/drivo-logo-claro.svg" alt="Drivo · ir al inicio"></a>
+            <span>Backoffice</span>
+        </div>
+        <nav class="nav-links" aria-label="Secciones">
+            <button class="nav-item active" onclick="showScreen('1')" id="nav-1" aria-current="page"><i class="fa-solid fa-chart-pie"></i> Panel general</button>
+            <button class="nav-item" onclick="showScreen('2')" id="nav-2"><i class="fa-solid fa-map-location-dot"></i> Mapa de flota</button>
+            <button class="nav-item" onclick="showScreen('3')" id="nav-3"><i class="fa-solid fa-users"></i> Usuarios y documentos</button>
+            <button class="nav-item" onclick="showScreen('4')" id="nav-4"><i class="fa-solid fa-money-check-dollar"></i> Finanzas y tarifas</button>
+            <button class="nav-item" onclick="showScreen('5')" id="nav-5"><i class="fa-solid fa-ticket"></i> Soporte y reportes</button>
+        </nav>
+        <div class="sidebar-foot">
+            <button class="btn btn-outline" style="width: 100%;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</button>
+            <p>Pantalla ilustrativa · datos de ejemplo</p>
+        </div>
+    </aside>
+
+    <!-- ================= MAIN WRAPPER ================= -->
+    <div class="main-wrapper">
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted);" aria-hidden="true"></i>
+                <label for="bo-search" class="sr-only">Buscar</label>
+                <input id="bo-search" type="search" placeholder="Buscar ID de viaje, usuario…">
+            </div>
+            <div class="admin-profile">
+                <button class="icon-btn" aria-label="Notificaciones (2 nuevas)"><i class="fa-solid fa-bell"></i><span class="dot"></span></button>
+                <div class="who" style="text-align: right;">
+                    <h4 style="margin: 0; font: 600 14px/20px var(--drivo-font-text);">Admin de ejemplo</h4>
+                    <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted);">Operación</p>
+                </div>
+                <div class="admin-avatar" aria-hidden="true">A</div>
+            </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <main class="content-area">
+
+            <!-- SCREEN 1: PANEL GENERAL -->
+            <section id="screen-1" class="screen active">
+                <div class="page-header">
+                    <p class="kicker">Operación</p>
+                    <h2>Panel general</h2>
+                    <p>Resumen de la operación en tiempo real. <span class="sample-tag">Datos de ejemplo</span></p>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="card kpi-card">
+                        <div class="kpi-icon green"><i class="fa-solid fa-car-side"></i></div>
+                        <div class="kpi-info">
+                            <h4>Viajes hoy</h4>
+                            <h2>1,432</h2>
+                        </div>
+                    </div>
+                    <div class="card kpi-card">
+                        <div class="kpi-icon blue"><i class="fa-solid fa-users"></i></div>
+                        <div class="kpi-info">
+                            <h4>Choferes en línea</h4>
+                            <h2>348</h2>
+                        </div>
+                    </div>
+                    <div class="card kpi-card">
+                        <div class="kpi-icon yellow"><i class="fa-solid fa-sack-dollar"></i></div>
+                        <div class="kpi-info">
+                            <h4>Ingresos brutos</h4>
+                            <h2>$45,200</h2>
+                        </div>
+                    </div>
+                    <div class="card kpi-card">
+                        <div class="kpi-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="kpi-info">
+                            <h4>Alertas S.O.S</h4>
+                            <h2>2</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="two-col" style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                    <div class="card">
+                        <h3 style="margin-bottom: 20px;">Volumen de viajes (últimos 7 días)</h3>
+                        <!-- Gráfica simulada con CSS simple -->
+                        <div role="img" aria-label="Gráfica de barras de ejemplo: el volumen sube durante la semana y el día más alto es hoy." style="height: 300px; display: flex; align-items: flex-end; gap: 10px; padding-bottom: 0; border-bottom: 2px solid var(--drivo-neutral-200);">
+                            <div style="flex: 1; background: var(--drivo-green-200); height: 40%; border-radius: 8px 8px 0 0;"></div>
+                            <div style="flex: 1; background: var(--drivo-green-200); height: 60%; border-radius: 8px 8px 0 0;"></div>
+                            <div style="flex: 1; background: var(--drivo-green-200); height: 50%; border-radius: 8px 8px 0 0;"></div>
+                            <div style="flex: 1; background: var(--drivo-green-200); height: 80%; border-radius: 8px 8px 0 0;"></div>
+                            <div style="flex: 1; background: var(--drivo-green-200); height: 70%; border-radius: 8px 8px 0 0;"></div>
+                            <div style="flex: 1; background: var(--drivo-green-200); height: 90%; border-radius: 8px 8px 0 0;"></div>
+                            <div style="flex: 1; background: var(--drivo-green-700); height: 100%; border-radius: 8px 8px 0 0;"></div>
+                        </div>
+                        <div class="chart-days" aria-hidden="true"><span>−6 d</span><span>−5 d</span><span>−4 d</span><span>−3 d</span><span>−2 d</span><span>Ayer</span><span style="color: var(--primary);">Hoy</span></div>
+                    </div>
+                    <div class="card">
+                        <h3 style="margin-bottom: 8px;">Actividad reciente</h3>
+                        <ul class="activity">
+                            <li><span class="badge active"><i class="fa-solid fa-user-plus"></i> Hace 2 min</span> Nuevo chofer registrado (documentos por revisar)</li>
+                            <li><span class="badge pending"><i class="fa-solid fa-route"></i> Hace 15 min</span> Alerta de viaje desviado (#TR-9023)</li>
+                            <li><span class="badge" style="background: var(--info-bg); color: var(--info-fg);"><i class="fa-solid fa-building-columns"></i> Hace 1 h</span> Recarga de saldo por transferencia, reflejada en automático (ID 445)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCREEN 2: MAPA DE FLOTA -->
+            <section id="screen-2" class="screen">
+                <div class="page-header split" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <p class="kicker">En vivo</p>
+                        <h2>Mapa de flota</h2>
+                        <p>Ubicación GPS en tiempo real de los choferes en línea. <span class="sample-tag">Datos de ejemplo</span></p>
+                    </div>
+                    <div>
+                        <label for="bo-zone" class="sr-only">Zona</label>
+                        <select id="bo-zone" class="form-control" style="width: 220px;">
+                            <option>Zona centro</option>
+                            <option>Zona norte</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mock-map" role="img" aria-label="Mapa ilustrativo con 2 choferes disponibles, 1 en viaje y 1 alerta S.O.S">
+                    <!-- Flota simulada -->
+                    <!-- Auto disponible -->
+                    <div class="map-marker available" style="top: 30%; left: 45%;"><i class="fa-solid fa-car"></i></div>
+                    <div class="map-marker available" style="top: 50%; left: 60%;"><i class="fa-solid fa-car"></i></div>
+
+                    <!-- Auto en viaje -->
+                    <div class="map-marker on-trip" style="top: 70%; left: 30%;"><i class="fa-solid fa-route"></i></div>
+
+                    <!-- Alerta -->
+                    <div class="map-marker alert" style="top: 40%; left: 80%; animation: pulseMarker 1.5s infinite;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+
+                    <style>
+                        @keyframes pulseMarker {
+                            0% { box-shadow: 0 0 0 0 rgba(200, 43, 33, 0.6); }
+                            70% { box-shadow: 0 0 0 15px rgba(200, 43, 33, 0); }
+                            100% { box-shadow: 0 0 0 0 rgba(200, 43, 33, 0); }
+                        }
+                    </style>
+
+                    <div class="map-legend">
+                        <h4>Simbología</h4>
+                        <div><span class="map-marker available"><i class="fa-solid fa-car"></i></span> Disponible</div>
+                        <div><span class="map-marker on-trip"><i class="fa-solid fa-route"></i></span> En viaje</div>
+                        <div><span class="map-marker alert"><i class="fa-solid fa-triangle-exclamation"></i></span> S.O.S / alerta</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCREEN 3: USUARIOS Y DOCUMENTOS -->
+            <section id="screen-3" class="screen">
+                <div class="page-header">
+                    <p class="kicker">Usuarios</p>
+                    <h2>Usuarios y documentos</h2>
+                    <p>Revisión de documentos de choferes e historial de pasajeros. <span class="sample-tag">Datos de ejemplo</span></p>
+                </div>
+
+                <div class="card">
+                    <div class="card-head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Choferes con documentos por revisar</h3>
+                        <div style="display: flex; gap: 10px;" role="group" aria-label="Filtro">
+                            <button class="btn btn-chip active" aria-pressed="true">Pendientes (3)</button>
+                            <button class="btn btn-chip" aria-pressed="false">Todos los choferes</button>
+                            <button class="btn btn-chip" aria-pressed="false">Pasajeros</button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Vehículo</th>
+                                    <th>Registro</th>
+                                    <th>Documentos</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#D-8801</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div class="admin-avatar" style="width:32px; height:32px; font-size: 0.85rem;">B</div>
+                                            Beto Muestra
+                                        </div>
+                                    </td>
+                                    <td>Nissan Versa 2019 (ABC-123)</td>
+                                    <td>Hace 1 día</td>
+                                    <td><span class="badge pending"><i class="fa-solid fa-hourglass-half"></i> Por revisar</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="alert('Abriendo visor de documentos…')">Revisar documentos</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#D-8795</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div class="admin-avatar" style="width:32px; height:32px; font-size: 0.85rem; background: var(--drivo-neutral-100); color: var(--text-main);">R</div>
+                                            Raúl Ejemplo
+                                        </div>
+                                    </td>
+                                    <td>Chevrolet Aveo 2021</td>
+                                    <td>Hace 2 días</td>
+                                    <td><span class="badge danger"><i class="fa-solid fa-circle-xmark"></i> INE rechazada</span></td>
+                                    <td>
+                                        <button class="btn btn-outline">Verificar de nuevo</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCREEN 4: FINANZAS Y TARIFAS -->
+            <section id="screen-4" class="screen">
+                <div class="page-header">
+                    <p class="kicker">Finanzas</p>
+                    <h2>Finanzas y tarifas</h2>
+                    <p>Reglas de la tarifa sugerida y de la comisión. <span class="sample-tag">Datos de ejemplo</span></p>
+                </div>
+
+                <div class="two-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <!-- Motor de Precios -->
+                    <div class="card">
+                        <h3 style="margin-bottom: 6px;">Tarifa sugerida</h3>
+                        <p class="hint" style="margin: 0 0 20px; padding-bottom: 14px; border-bottom: 1px solid var(--drivo-neutral-100);">Es solo una referencia: el pasajero propone y el chofer acepta o contraoferta.</p>
+                        <div class="form-group">
+                            <label for="f-base">Tarifa base inicial (MXN)</label>
+                            <input id="f-base" type="number" class="form-control" value="25.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="f-km">Precio por kilómetro (MXN)</label>
+                            <input id="f-km" type="number" class="form-control" value="6.50">
+                        </div>
+                        <div class="form-group">
+                            <label for="f-min">Tarifa mínima por viaje (MXN)</label>
+                            <input id="f-min" type="number" class="form-control" value="40" min="40">
+                            <p class="hint">Mínimo $40 por viaje.</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="f-mult">Ajuste de la tarifa sugerida por demanda</label>
+                            <select id="f-mult" class="form-control">
+                                <option>Desactivado (1.0x)</option>
+                                <option>Lluvia leve (1.2x)</option>
+                                <option selected>Alta demanda (1.5x)</option>
+                                <option>Extrema (2.0x)</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; min-height: 48px;">Actualizar tarifas</button>
+                    </div>
+
+                    <!-- Comisiones y Cupones -->
+                    <div class="card">
+                        <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--drivo-neutral-100); padding-bottom: 14px;">Modelo de negocio</h3>
+                        <div class="form-group">
+                            <label for="f-com">Comisión Drivo por viaje (%)</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input id="f-com" type="number" class="form-control" value="10.0" max="100">
+                                <button class="btn btn-outline" style="min-height: 48px;">Aplicar</button>
+                            </div>
+                            <p class="hint num">Aplica a los viajes nuevos que se acepten. Ejemplo: en un viaje de $60, el chofer recibe $54.00.</p>
+                        </div>
+
+                        <h3 style="margin: 30px 0 20px 0; border-bottom: 1px solid var(--drivo-neutral-100); padding-bottom: 14px;">Generador de cupones</h3>
+                        <label for="f-cupon" class="sr-only">Código del cupón</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input id="f-cupon" type="text" class="form-control" placeholder="Ej. BIENVENIDA50">
+                            <button class="btn btn-primary" style="min-height: 48px;">Crear</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCREEN 5: SOPORTE Y TICKETS -->
+            <section id="screen-5" class="screen">
+                <div class="page-header">
+                    <p class="kicker">Soporte</p>
+                    <h2>Centro de soporte</h2>
+                    <p>Reportes de soporte y atención de emergencias S.O.S. <span class="sample-tag">Datos de ejemplo</span></p>
+                </div>
+
+                <div class="card">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Reporte</th>
+                                    <th>Tipo</th>
+                                    <th>Usuario</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background: var(--danger-bg);">
+                                    <td><strong style="color: var(--danger-fg);">#SOS-991</strong></td>
+                                    <td><strong style="color: var(--danger-fg);"><i class="fa-solid fa-triangle-exclamation"></i> Alerta de pánico</strong></td>
+                                    <td>Ana Ejemplo (pasajera)</td>
+                                    <td>Hace 2 min</td>
+                                    <td><span class="badge danger" style="background: var(--drivo-neutral-0);"><i class="fa-solid fa-circle-exclamation"></i> Crítico</span></td>
+                                    <td><button class="btn btn-danger">Atender ahora</button></td>
+                                </tr>
+                                <tr>
+                                    <td>#TK-1042</td>
+                                    <td>Problema de cobro</td>
+                                    <td>Luis Ejemplo (chofer)</td>
+                                    <td>Hace 1 h</td>
+                                    <td><span class="badge pending"><i class="fa-solid fa-envelope-open"></i> Abierto</span></td>
+                                    <td><button class="btn btn-outline">Ver detalle</button></td>
+                                </tr>
+                                <tr>
+                                    <td>#TK-1038</td>
+                                    <td>Objeto perdido</td>
+                                    <td>Sofía Muestra (pasajera)</td>
+                                    <td>Hace 4 h</td>
+                                    <td><span class="badge active"><i class="fa-solid fa-circle-check"></i> Resuelto</span></td>
+                                    <td><button class="btn btn-outline">Archivo</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function showScreen(id) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            // Deselect all nav items
+            document.querySelectorAll('.nav-item').forEach(el => { el.classList.remove('active'); el.removeAttribute('aria-current'); });
+
+            // Show target screen
+            document.getElementById('screen-' + id).classList.add('active');
+            // Highlight nav
+            const nav = document.getElementById('nav-' + id);
+            nav.classList.add('active');
+            nav.setAttribute('aria-current', 'page');
+        }
+    </script>
+</body>
+</html>
